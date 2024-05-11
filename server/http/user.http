@@ -1,0 +1,41 @@
+POST http://localhost:5000/api/users/register
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTFjZmUzZjk4NTA1MTNjODBiOTNkZmEiLCJwZXJtaXNzaW9ucyI6eyJfaWQiOiI2NTFjZDc0NTEzMDU2YjRmOTRhY2Y4NzkiLCJuYW1lIjoiYWRtaW4iLCJzdGF0dXMiOjEsInBlcm1pc3Npb24iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJwb3NpdGlvbiI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInJvb20iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJzaW5nbGUiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSIsImFwcHJvdmUiXSwic2luZ2xlVHlwZSI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInVzZXIiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJjcmVhdGVkQXQiOiIyMDIzLTEwLTA0VDAzOjA4OjUzLjMzOVoiLCJ1cGRhdGVkQXQiOiIyMDIzLTEwLTA0VDAzOjA4OjUzLjMzOVoiLCJfX3YiOjB9LCJpYXQiOjE2OTY2OTcyNDh9.OwUYu_qM372djhbpA1R1E8FiX1bMeXK0OK6ym8J4M0E
+
+{
+    "name":"Đinh Văn T",
+    "email":"tinh21@gmail.com",
+    "password":"1",
+    "room":"651cd84ef0cd55e83b306219",
+    "permissions":"651d35df34ed68d41bb1d9bc",
+    "positions":"651fc29d058a365fccff9c37"
+    
+}
+
+###
+POST http://localhost:5000/api/users/login
+Content-Type: application/json
+
+{
+    "email":"admin@gmail.com",
+    "password":"123"
+}
+###
+Put http://localhost:5000/api/users/update/651d0ce00c3c16a4fcd21826
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTFjZmUzZjk4NTA1MTNjODBiOTNkZmEiLCJwZXJtaXNzaW9ucyI6eyJfaWQiOiI2NTFjZDc0NTEzMDU2YjRmOTRhY2Y4NzkiLCJuYW1lIjoiYWRtaW4iLCJzdGF0dXMiOjEsInBlcm1pc3Npb24iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJwb3NpdGlvbiI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInJvb20iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJzaW5nbGUiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSIsImFwcHJvdmUiXSwic2luZ2xlVHlwZSI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInVzZXIiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJjcmVhdGVkQXQiOiIyMDIzLTEwLTA0VDAzOjA4OjUzLjMzOVoiLCJ1cGRhdGVkQXQiOiIyMDIzLTEwLTA0VDAzOjA4OjUzLjMzOVoiLCJfX3YiOjB9LCJpYXQiOjE3MTM1MzI5MDAsImV4cCI6MTcxMzUzMjkzMH0.epEp2A3lDCR_qsbq7a_PGfw494zQ4dcfMbY7KiHxn88
+
+{
+    "name":"Phạm Văn Trường",
+    "email":"truong@gmail.com",
+    "password":"1",
+    "sex": "2",
+    "phone":"0975128913",
+    "birthday": "14/10/2001"
+}
+
+
+###
+GET  http://localhost:5000/api/users/getAllUser
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTFjZmUzZjk4NTA1MTNjODBiOTNkZmEiLCJwZXJtaXNzaW9ucyI6eyJfaWQiOiI2NTFjZDc0NTEzMDU2YjRmOTRhY2Y4NzkiLCJuYW1lIjoiYWRtaW4iLCJzdGF0dXMiOjEsInBlcm1pc3Npb24iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJwb3NpdGlvbiI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInJvb20iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJzaW5nbGUiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSIsImFwcHJvdmUiXSwic2luZ2xlVHlwZSI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInVzZXIiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJjcmVhdGVkQXQiOiIyMDIzLTEwLTA0VDAzOjA4OjUzLjMzOVoiLCJ1cGRhdGVkQXQiOiIyMDIzLTEwLTA0VDAzOjA4OjUzLjMzOVoiLCJfX3YiOjB9LCJpYXQiOjE3MTM3MDk3MzYsImV4cCI6MTcxMzcwOTc0Nn0.tZr5dzs85T4_iBwoOUsXOOqRfy_59TiDdAIwXEhsUZY

@@ -1,0 +1,128 @@
+POST  http://localhost:5000/api/singleType/create
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTFjZmUzZjk4NTA1MTNjODBiOTNkZmEiLCJwZXJtaXNzaW9ucyI6eyJfaWQiOiI2NTFjZDc0NTEzMDU2YjRmOTRhY2Y4NzkiLCJuYW1lIjoiYWRtaW4iLCJzdGF0dXMiOjEsInBlcm1pc3Npb24iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJwb3NpdGlvbiI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInJvb20iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJzaW5nbGUiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSIsImFwcHJvdmUiXSwic2luZ2xlVHlwZSI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInVzZXIiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJjcmVhdGVkQXQiOiIyMDIzLTEwLTA0VDAzOjA4OjUzLjMzOVoiLCJ1cGRhdGVkQXQiOiIyMDIzLTEwLTA0VDAzOjA4OjUzLjMzOVoiLCJfX3YiOjB9LCJpYXQiOjE2OTY2MDA2MDR9.1v3Y_tA83glkwGzLchPamHl31yCHOdKGT2bVaDxKEcI
+
+
+{
+    "name": "Đơn xin nghỉ phép",
+    "content":[
+        {
+            "key":"proposedName",
+            "label":"Tên đề xuất",
+            "required": true
+        },
+        {
+            "key":"proposalGroup",
+            "label":"Nhóm đề xuất",
+            "required": true
+        },
+        {
+            "key":"fullName",
+            "label":"Họ Và tên",
+            "required": true
+        },
+        {
+            "key":"room",
+            "label":"bộ phận",
+            "required": true
+        },
+        {
+            "key":"startDay",
+            "label":"Ngày bắt đầu làm việc",
+            "required": true
+        },
+        {
+            "key":"position",
+            "label":"chức vụ",
+            "required": true
+        },
+        {
+            "key":"TheLastWorkingDay",
+            "label":"Ngày làm việc cuối cùng",
+            "required": true
+        },
+        {
+            "key":"reasonForQuittingJob",
+            "label":"Lí do nghỉ việc",
+            "required": true
+        },
+        {
+            "key":"approver",
+            "label":"Người phê duyệt",
+            "required": true
+        }
+
+    ]
+}
+###
+get  http://localhost:5000/api/singleType/getOne/652014d9a520f45d51f638d9
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTFjZmUzZjk4NTA1MTNjODBiOTNkZmEiLCJwZXJtaXNzaW9ucyI6eyJfaWQiOiI2NTFjZDc0NTEzMDU2YjRmOTRhY2Y4NzkiLCJuYW1lIjoiYWRtaW4iLCJzdGF0dXMiOjEsInBlcm1pc3Npb24iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJwb3NpdGlvbiI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInJvb20iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJzaW5nbGUiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSIsImFwcHJvdmUiXSwic2luZ2xlVHlwZSI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInVzZXIiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJjcmVhdGVkQXQiOiIyMDIzLTEwLTA0VDAzOjA4OjUzLjMzOVoiLCJ1cGRhdGVkQXQiOiIyMDIzLTEwLTA0VDAzOjA4OjUzLjMzOVoiLCJfX3YiOjB9LCJpYXQiOjE2OTY2MDA2MDR9.1v3Y_tA83glkwGzLchPamHl31yCHOdKGT2bVaDxKEcI
+
+###
+get  http://localhost:5000/api/singleType/getAll
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTFjZmUzZjk4NTA1MTNjODBiOTNkZmEiLCJwZXJtaXNzaW9ucyI6eyJfaWQiOiI2NTFjZDc0NTEzMDU2YjRmOTRhY2Y4NzkiLCJuYW1lIjoiYWRtaW4iLCJzdGF0dXMiOjEsInBlcm1pc3Npb24iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJwb3NpdGlvbiI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInJvb20iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJzaW5nbGUiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSIsImFwcHJvdmUiXSwic2luZ2xlVHlwZSI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInVzZXIiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJjcmVhdGVkQXQiOiIyMDIzLTEwLTA0VDAzOjA4OjUzLjMzOVoiLCJ1cGRhdGVkQXQiOiIyMDIzLTEwLTA0VDAzOjA4OjUzLjMzOVoiLCJfX3YiOjB9LCJpYXQiOjE2OTY2MDA2MDR9.1v3Y_tA83glkwGzLchPamHl31yCHOdKGT2bVaDxKEcI
+
+
+###
+PUT  http://localhost:5000/api/singleType/update/652014d9a520f45d51f638d8
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTFjZmUzZjk4NTA1MTNjODBiOTNkZmEiLCJwZXJtaXNzaW9ucyI6eyJfaWQiOiI2NTFjZDc0NTEzMDU2YjRmOTRhY2Y4NzkiLCJuYW1lIjoiYWRtaW4iLCJzdGF0dXMiOjEsInBlcm1pc3Npb24iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJwb3NpdGlvbiI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInJvb20iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJzaW5nbGUiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSIsImFwcHJvdmUiXSwic2luZ2xlVHlwZSI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInVzZXIiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJjcmVhdGVkQXQiOiIyMDIzLTEwLTA0VDAzOjA4OjUzLjMzOVoiLCJ1cGRhdGVkQXQiOiIyMDIzLTEwLTA0VDAzOjA4OjUzLjMzOVoiLCJfX3YiOjB9LCJpYXQiOjE2OTY2MDA2MDR9.1v3Y_tA83glkwGzLchPamHl31yCHOdKGT2bVaDxKEcI
+
+{
+    "name": "Đơn xin nghỉ phép",
+    "content":[
+        {
+            "key":"proposedName",
+            "label":"Tên đề xuất",
+            "required": true
+        },
+        {
+            "key":"proposalGroup",
+            "label":"Nhóm đề xuất",
+            "required": true
+        },
+        {
+            "key":"fullName",
+            "label":"Họ Và tên",
+            "required": true
+        },
+        {
+            "key":"room",
+            "label":"bộ phận",
+            "required": true
+        },
+        {
+            "key":"startDay",
+            "label":"Ngày bắt đầu làm việc",
+            "required": true
+        },
+        {
+            "key":"position",
+            "label":"chức vụ",
+            "required": true
+        },
+        {
+            "key":"TheLastWorkingDay",
+            "label":"Ngày làm việc cuối cùng",
+            "required": true
+        },
+        {
+            "key":"reasonForQuittingJob",
+            "label":"Lí do nghỉ việc",
+            "required": true
+        },
+        {
+            "key":"approver",
+            "label":"Người phê duyệt",
+            "required": true
+        }
+
+    ]
+}
+
+###
+Delete  http://localhost:5000/api/singleType/delete/652014d9a520f45d51f638d8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTFjZmUzZjk4NTA1MTNjODBiOTNkZmEiLCJwZXJtaXNzaW9ucyI6eyJfaWQiOiI2NTFjZDc0NTEzMDU2YjRmOTRhY2Y4NzkiLCJuYW1lIjoiYWRtaW4iLCJzdGF0dXMiOjEsInBlcm1pc3Npb24iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJwb3NpdGlvbiI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInJvb20iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJzaW5nbGUiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSIsImFwcHJvdmUiXSwic2luZ2xlVHlwZSI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInVzZXIiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJjcmVhdGVkQXQiOiIyMDIzLTEwLTA0VDAzOjA4OjUzLjMzOVoiLCJ1cGRhdGVkQXQiOiIyMDIzLTEwLTA0VDAzOjA4OjUzLjMzOVoiLCJfX3YiOjB9LCJpYXQiOjE2OTY2MDA2MDR9.1v3Y_tA83glkwGzLchPamHl31yCHOdKGT2bVaDxKEcI
+
+
+

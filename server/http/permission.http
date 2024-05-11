@@ -1,0 +1,65 @@
+
+POST http://localhost:5000/api/permission/create
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTFjZmUzZjk4NTA1MTNjODBiOTNkZmEiLCJwZXJtaXNzaW9ucyI6eyJfaWQiOiI2NTFjZDc0NTEzMDU2YjRmOTRhY2Y4NzkiLCJuYW1lIjoiYWRtaW4iLCJzdGF0dXMiOjEsInBlcm1pc3Npb24iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJwb3NpdGlvbiI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInJvb20iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJzaW5nbGUiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSIsImFwcHJvdmUiXSwic2luZ2xlVHlwZSI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInVzZXIiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJjcmVhdGVkQXQiOiIyMDIzLTEwLTA0VDAzOjA4OjUzLjMzOVoiLCJ1cGRhdGVkQXQiOiIyMDIzLTEwLTA0VDAzOjA4OjUzLjMzOVoiLCJfX3YiOjB9LCJpYXQiOjE2OTYzOTkwMDh9.O2jIYYTHfVAFozzV5YAlswTzUJFUeRgCRXBSd3gACa0
+
+{
+    "name": "Quản lý phòng ban",
+    "permission": ["read"],
+    "position":["read"],
+    "room": ["create","read","update","delete"],
+    "single": ["read"],
+    "singleType": ["read"],
+    "user":["read","update"]
+}
+
+###
+GET  http://localhost:5000/api/permission/getOne/651cffa318da52fbab87b00f
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTFjZmUzZjk4NTA1MTNjODBiOTNkZmEiLCJwZXJtaXNzaW9ucyI6eyJfaWQiOiI2NTFjZDc0NTEzMDU2YjRmOTRhY2Y4NzkiLCJuYW1lIjoiYWRtaW4iLCJzdGF0dXMiOjEsInBlcm1pc3Npb24iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJwb3NpdGlvbiI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInJvb20iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJzaW5nbGUiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSIsImFwcHJvdmUiXSwic2luZ2xlVHlwZSI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInVzZXIiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJjcmVhdGVkQXQiOiIyMDIzLTEwLTA0VDAzOjA4OjUzLjMzOVoiLCJ1cGRhdGVkQXQiOiIyMDIzLTEwLTA0VDAzOjA4OjUzLjMzOVoiLCJfX3YiOjB9LCJpYXQiOjE3MTU0NDIwOTQsImV4cCI6MTcxNTUyODQ5NH0.JhQukVC8cbi_4WqXMtX11Xq7ErBs5hdT9n2hwT-xZmY
+
+
+###
+GET http://localhost:5000/api/permission/getAll?search=l
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTFjZmUzZjk4NTA1MTNjODBiOTNkZmEiLCJwZXJtaXNzaW9ucyI6eyJfaWQiOiI2NTFjZDc0NTEzMDU2YjRmOTRhY2Y4NzkiLCJuYW1lIjoiYWRtaW4iLCJzdGF0dXMiOjEsInBlcm1pc3Npb24iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJwb3NpdGlvbiI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInJvb20iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJzaW5nbGUiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSIsImFwcHJvdmUiXSwic2luZ2xlVHlwZSI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInVzZXIiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJjcmVhdGVkQXQiOiIyMDIzLTEwLTA0VDAzOjA4OjUzLjMzOVoiLCJ1cGRhdGVkQXQiOiIyMDIzLTEwLTA0VDAzOjA4OjUzLjMzOVoiLCJfX3YiOjB9LCJpYXQiOjE3MTU0NDQ4ODEsImV4cCI6MTcxNTUzMTI4MX0.S71v9UmOX7I7E2stj3LgeamU1fmTBop2ixzmGM53N9Q
+
+
+###
+GET http://localhost:5000/api/permission/getAllName
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTFjZmUzZjk4NTA1MTNjODBiOTNkZmEiLCJwZXJtaXNzaW9ucyI6eyJfaWQiOiI2NTFjZDc0NTEzMDU2YjRmOTRhY2Y4NzkiLCJuYW1lIjoiYWRtaW4iLCJzdGF0dXMiOjEsInBlcm1pc3Npb24iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJwb3NpdGlvbiI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInJvb20iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJzaW5nbGUiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSIsImFwcHJvdmUiXSwic2luZ2xlVHlwZSI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInVzZXIiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJjcmVhdGVkQXQiOiIyMDIzLTEwLTA0VDAzOjA4OjUzLjMzOVoiLCJ1cGRhdGVkQXQiOiIyMDIzLTEwLTA0VDAzOjA4OjUzLjMzOVoiLCJfX3YiOjB9LCJpYXQiOjE2OTYzOTkwMDh9.O2jIYYTHfVAFozzV5YAlswTzUJFUeRgCRXBSd3gACa0
+
+###
+PUT http://localhost:5000/api/permission/update/651d35df34ed68d41bb1d9bc
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTFjNDU2MDc1NjJmN2E3MDNkZmM4NWQiLCJwZXJtaXNzaW9ucyI6eyJfaWQiOiI2NTFiYjM4Y2NjNjIxNTVjZjhlOTRmMTgiLCJuYW1lIjoibmV3IFBlcm1pc3Npb25zIiwic3RhdHVzIjoxLCJwZXJtaXNzaW9uIjpbInJlYWQiLCJ1cGRhdGUiLCJkZWxldGUiXSwicG9zaXRpb24iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJyb29tIjpbImNyZWF0ZSIsInJlYWQiLCJ1cGRhdGUiLCJkZWxldGUiXSwic2luZ2xlIjpbImNyZWF0ZSIsInJlYWQiLCJ1cGRhdGUiLCJkZWxldGUiLCJhcHByb3ZlIl0sInNpbmdsZVR5cGUiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJ1c2VyIjpbImNyZWF0ZSIsInJlYWQiLCJ1cGRhdGUiLCJkZWxldGUiXSwiY3JlYXRlZEF0IjoiMjAyMy0xMC0wM1QwNjoyNDoxMi43OTBaIiwidXBkYXRlZEF0IjoiMjAyMy0xMC0wM1QxNzoxOTo1My4yMzZaIiwiX192IjowfSwiaWF0IjoxNjk2MzUzNjAyfQ.j38b9Khjww0kion9QjPqabiEPcC5aNXn-p9ycSEqPsY
+
+{  
+     
+   "name": "Quản lý chức v",
+    "permission": ["read"],
+    "position":["create","read","update","delete"],
+    "room": ["read"],
+    "single": ["read"],
+    "singleType": ["read"],
+    "user": ["read","update"]
+
+}
+###
+DELETE  http://localhost:5000/api/permission/delete/651d07d6a95caad38630c185
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTFjNDU2MDc1NjJmN2E3MDNkZmM4NWQiLCJwZXJtaXNzaW9ucyI6eyJfaWQiOiI2NTFiYjM4Y2NjNjIxNTVjZjhlOTRmMTgiLCJuYW1lIjoibmV3IFBlcm1pc3Npb25zIiwic3RhdHVzIjoxLCJwZXJtaXNzaW9uIjpbInJlYWQiLCJ1cGRhdGUiLCJkZWxldGUiXSwicG9zaXRpb24iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJyb29tIjpbImNyZWF0ZSIsInJlYWQiLCJ1cGRhdGUiLCJkZWxldGUiXSwic2luZ2xlIjpbImNyZWF0ZSIsInJlYWQiLCJ1cGRhdGUiLCJkZWxldGUiLCJhcHByb3ZlIl0sInNpbmdsZVR5cGUiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJ1c2VyIjpbImNyZWF0ZSIsInJlYWQiLCJ1cGRhdGUiLCJkZWxldGUiXSwiY3JlYXRlZEF0IjoiMjAyMy0xMC0wM1QwNjoyNDoxMi43OTBaIiwidXBkYXRlZEF0IjoiMjAyMy0xMC0wM1QxNzoxOTo1My4yMzZaIiwiX192IjowfSwiaWF0IjoxNjk2MzUzNjAyfQ.j38b9Khjww0kion9QjPqabiEPcC5aNXn-p9ycSEqPsY
+
+### mẫu admin
+# "name": "admin",
+# "status": 1,
+# "permission": ["create","read","update","delete" ],
+# "position": ["create","read","update","delete"],
+# "room": ["create","read","update","delete"],
+# "single": ["create","read","update","delete","approve"],
+# "singleType": ["create","read","update","delete"],
+# "user": ["create","read","update","delete"],
+# "createdAt": "2023-10-04T03:08:53.339Z",
+# "updatedAt": "2023-10-04T03:08:53.339Z",
+# "__v": 0
+
+    
+    
+   
