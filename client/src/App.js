@@ -1,22 +1,25 @@
+import { ToastContainer } from "react-toastify";
+
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Auth from "./views/Auth";
-import Landing from "./components/layout/Landing";
 import AuthContextProvider from "./contexts/AuthContext.js";
-import Home from "./views/Home.js";
-// import ProtectedRoute from "./components/routing/ProtectedRoute.js";
+import RootRouter from "./router/RootRouter.jsx";
 
 function App() {
   return (
     <AuthContextProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/login" element={<Auth authRoute="login" />} />
-          {/* <Route path="/home" element={<ProtectedRoute element={Home} />} /> */}
-          <Route path="/home" element={<Home />} />
-        </Routes>
-      </Router>
+      <RootRouter />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </AuthContextProvider>
   );
 }
