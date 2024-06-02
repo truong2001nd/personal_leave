@@ -1,5 +1,7 @@
 import { createContext, useReducer, useEffect } from "react";
+import { toast } from "react-toastify";
 import axios from "axios";
+
 import authReducer from "../reducers/authReducer.js";
 import { apiUrl, LOCAL_STORAGE_TOKEN_NAME } from "./constants.js";
 import setAuthToken from "../utils/setAuthToken";
@@ -43,10 +45,13 @@ const AuthContextProvider = ({ children }) => {
   const loginUser = async (userForm) => {
     try {
       const response = await axios.post(`${apiUrl}/users/login`, userForm);
-      if (response.data.success)
+      if (response.data.status === 200) {
         localStorage.setItem(LOCAL_STORAGE_TOKEN_NAME, response.data.token);
+      } else {
+        toast.error(response.data.message);
+      }
 
-      // await loadUser();
+      await loadUser();
 
       return response.data;
     } catch (error) {
