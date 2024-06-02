@@ -3,14 +3,14 @@ const Room = require("../models/Rooms.js");
 const createRoom = async (req, res, next) => {
   if (!req.permissions.room.includes("create")) {
     return res
-      .status(400)
+      .status(401)
       .json({ success: false, message: "Bạn không có quyền tạo phòng ban" });
   }
   const { name, description } = req.body;
   if (!name) {
     return res
-      .status(400)
-      .json({ success: false, message: "Vui lòng nhập tên phòng ban" });
+      .status(422)
+      .json({ success: false, message: "Sai dữ liệu đầu vào" });
   }
   try {
     const roomReleaser = await Room.findOne({ name: name });
@@ -24,7 +24,7 @@ const createRoom = async (req, res, next) => {
       description: description || "",
     });
     await newRoom.save();
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Thành công ",
       data: newRoom,
@@ -40,7 +40,7 @@ const createRoom = async (req, res, next) => {
 const getOneRoom = async (req, res) => {
   if (!req.permissions.room.includes("read")) {
     return res
-      .status(400)
+      .status(401)
       .json({ success: false, message: "Bạn không có quyền xem phòng ban" });
   }
   try {
@@ -51,7 +51,7 @@ const getOneRoom = async (req, res) => {
         .json({ success: false, message: "Phòng ban đã tồn tại" });
     }
     const RoomOne = await Room.findOne(roomCondition);
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Thành công",
       data: RoomOne,
@@ -66,7 +66,7 @@ const getOneRoom = async (req, res) => {
 const getAllRoom = async (req, res) => {
   if (!req.permissions.room.includes("read")) {
     return res
-      .status(400)
+      .status(401)
       .json({ success: false, message: "Bạn không có quyền xem phòng ban" });
   }
   try {
@@ -86,7 +86,7 @@ const getAllRoom = async (req, res) => {
 
     // Đếm số lượng Room để tính tổng số trang
     const totalCount = await Room.countDocuments(searchConditions);
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Thành công",
       totalCount: totalCount,
@@ -102,14 +102,14 @@ const getAllRoom = async (req, res) => {
 const updateRoom = async (req, res, next) => {
   if (!req.permissions.room.includes("update")) {
     return res
-      .status(400)
+      .status(401)
       .json({ success: false, message: "Bạn không có quyền xem phòng ban" });
   }
   const { name, description } = req.body;
   if (!name) {
     return res
-      .status(404)
-      .json({ success: false, message: "Vui lòng nhập tên phòng ban" });
+      .status(422)
+      .json({ success: false, message: "Sai dữ liệu đầu vào" });
   }
   try {
     // Kiểm tra tên phòng đã tồn tại hay chưa
@@ -130,12 +130,12 @@ const updateRoom = async (req, res, next) => {
     if (!roomCondition) {
       return res
         .status(400)
-        .json({ success: false, message: "Mã id phòng không đúng" });
+        .json({ success: false, message: "ID phòng ban không hợp lệ" });
     }
     updateRoom = await Room.findOneAndUpdate(roomCondition, updateRoom, {
       new: true,
     });
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Cập nhật thành công!",
       data: updateRoom,
@@ -150,7 +150,7 @@ const updateRoom = async (req, res, next) => {
 const deleteRoom = async (req, res) => {
   if (!req.permissions.room.includes("delete")) {
     return res
-      .status(400)
+      .status(401)
       .json({ success: false, message: "Bạn không có quyền xóa phòng ban" });
   }
   try {
@@ -158,9 +158,11 @@ const deleteRoom = async (req, res) => {
     if (!deleteRoom) {
       return res
         .status(400)
-        .json({ success: false, message: "Mã id phòng không đúng" });
+        .json({ success: false, message: "ID phòng ban không hợp lệ" });
     }
-    res.json({ success: true, message: "Đã xóa thành công", data: deleteRoom });
+    res
+      .status(200)
+      .json({ success: true, message: "Đã xóa thành công", data: deleteRoom });
   } catch (error) {
     console.log(error);
     res

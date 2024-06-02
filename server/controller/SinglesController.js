@@ -2,7 +2,9 @@ const { request } = require("express");
 const Singles = require("../models/Singles.js");
 const SingleType = require("../models/SingleTypes.js");
 const User = require("../models/Users.js");
+const sendMail = require("../helper/sendMail.js");
 
+// tạo đơn
 const createSingle = async (req, res, next) => {
   if (!req.permissions.single.includes("create")) {
     return res
@@ -12,29 +14,23 @@ const createSingle = async (req, res, next) => {
   const { name, content, singlesStyes, approver } = req.body;
   if (!name || !content || !singlesStyes || !approver) {
     return res
-      .status(400)
-      .json({ success: false, message: "Mời nhập đủ dữ liệu đầu vào" });
+      .status(422)
+      .json({ success: false, message: "Sai dữ liệu đầu vào" });
   }
   try {
-    const singleRelease = await Singles.findOne({ name });
-
-    if (singleRelease) {
-      return res
-        .status(401)
-        .json({ success: false, message: " đơn đã tồn tại" });
-    }
+    // kiểm tra loại đơn
     const singlesStyesRelease = await SingleType.findOne({ _id: singlesStyes });
-
     if (!singlesStyesRelease) {
       return res
-        .status(401)
+        .status(404)
         .json({ success: false, message: "Không tồn tại Loại đơn" });
     }
-    const approverRelease = await User.findOne({ _id: approver });
 
+    // kiểm tra người phê duyệt
+    const approverRelease = await User.findOne({ _id: approver });
     if (!approverRelease) {
       return res
-        .status(401)
+        .status(404)
         .json({ success: false, message: "Mã người phê duyệt không tồn tại" });
     }
 
@@ -47,11 +43,21 @@ const createSingle = async (req, res, next) => {
       status: 0,
     });
     await newSingles.save();
-
-    res.json({
+    if (!(await newSingles.save())) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Gửi đơn thất bại!" });
+    }
+    res.status(200).json({
       success: true,
       message: "Thành công",
       data: newSingles,
+    });
+    await sendMail({
+      email: approverRelease.email,
+      subject: `"Thông báo có đơn mới từ ${req.userName} "`,
+      html: `<h1>${name} <h1>  
+      `,
     });
   } catch (error) {
     console.log(error);
@@ -61,6 +67,7 @@ const createSingle = async (req, res, next) => {
   }
 };
 
+// Xem tất cả đơn.
 const getAllSingle = async (req, res) => {
   // check quyen
 
@@ -69,8 +76,6 @@ const getAllSingle = async (req, res) => {
       .status(401)
       .json({ success: false, message: "Tài khoản không có quyền truy cập" });
   }
-
-  // check quyen
 
   try {
     const page = parseInt(req.query.page) || 1; // Trang hiện tại, mặc định là trang 1
@@ -96,7 +101,7 @@ const getAllSingle = async (req, res) => {
         .json({ success: false, message: "Chưa có đơn nào được tạo!" });
     }
 
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Thành công",
       totalCount: totalCount,
@@ -107,7 +112,8 @@ const getAllSingle = async (req, res) => {
     res.status(500).json({ success: false, message: "Dịch vụ bị gián đoạn" });
   }
 };
-const destroySingle = async (req, res) => {
+
+const deleteSingle = async (req, res) => {
   // check quyen
 
   if (!req.permissions.single.includes("delete")) {
@@ -124,10 +130,10 @@ const destroySingle = async (req, res) => {
     });
     if (!deleteSing) {
       return res
-        .status(400)
+        .status(404)
         .json({ success: false, message: "Loại đơn này không tồn tại" });
     }
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Đã xóa thành công",
       data: deleteSing,
@@ -146,13 +152,11 @@ const updateSingle = async (req, res) => {
       .json({ success: false, message: "Tài khoản không có quyền truy cập" });
   }
 
-  // check quyen
-
   const { name, content } = req.body;
   if (!name) {
     return res
-      .status(400)
-      .json({ success: false, message: "Vui lòng nhập tên loại đơn" });
+      .status(422)
+      .json({ success: false, message: "Sai dữ liệu đầu vào" });
   }
   try {
     const singleId = await Singles.findOne({ _id: req.params.id });
@@ -186,7 +190,7 @@ const updateSingle = async (req, res) => {
       updateSingle,
       { new: true }
     );
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Cập nhật thành công!",
       data: newSingleId,
@@ -197,4 +201,49 @@ const updateSingle = async (req, res) => {
   }
 };
 
-module.exports = { createSingle, getAllSingle, destroySingle, updateSingle };
+// phệ duyệt đơn
+const approvalSingle = async (req, res) => {
+  if (!req.permissions.single.includes("update")) {
+    return res
+      .status(401)
+      .json({ success: false, message: "Tài khoản không có quyền chỉnh sửa" });
+  }
+  const { status } = req.body;
+  if (status !== 1 && status !== 2) {
+    return res.status(422).json({
+      success: false,
+      message: "Sai dữ liệu đầu vào",
+    });
+  }
+
+  try {
+    const singleId = await Singles.findOne({ _id: req.params.id });
+    if (!singleId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "ID đơn Không hợp lệ" });
+    }
+
+    let approvalSingle = {
+      status,
+    };
+    const newSingleId = await Singles.findOneAndUpdate(
+      { _id: req.params.id },
+      approvalSingle,
+      { new: true }
+    );
+    res.status(200).json({
+      success: true,
+      message: "Phê duyệt  thành công!",
+      data: newSingleId,
+    });
+  } catch (error) {}
+};
+
+module.exports = {
+  createSingle,
+  getAllSingle,
+  deleteSingle,
+  updateSingle,
+  approvalSingle,
+};

@@ -6,19 +6,20 @@ const verifyToken = (req, res, next) => {
   if (!token)
     return res
       .status(401)
-      .json({ success: false, message: "Access token not found" });
+      .json({ status: 401, message: "Access token not found" });
 
   try {
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
     req.userId = decoded.userId;
+    req.userName = decoded.userName;
     req.permissions = decoded.permissions;
     next();
   } catch (error) {
     console.log(error);
     return res
       .status(403)
-      .json({ success: false, message: "Code is invalid or expired" });
+      .json({ status: 403, message: "Code is invalid or expired" });
   }
 };
 

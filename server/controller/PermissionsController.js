@@ -31,7 +31,7 @@ const createPermission = async (req, res, next) => {
     )
   ) {
     return res
-      .status(400)
+      .status(422)
       .json({ success: false, message: "Sai dữ liệu đầu vào" });
   }
 
@@ -40,7 +40,7 @@ const createPermission = async (req, res, next) => {
 
     if (permissionRelease) {
       return res
-        .status(401)
+        .status(409)
         .json({ success: false, message: "Tên quyền đã tồn tại" });
     }
 
@@ -57,7 +57,7 @@ const createPermission = async (req, res, next) => {
 
     await newPermission.save();
 
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Thành công",
       data: newPermission,
@@ -86,7 +86,7 @@ const getOnePermission = async (req, res) => {
     const permissionOne = await Permissions.findOne({ _id: req.params.id });
     if (!permissionOne) {
       return res
-        .status(400)
+        .status(404)
         .json({ success: false, message: "Quyền này không tồn tại" });
     }
     res.json({ success: true, message: "Thành công", data: permissionOne });
@@ -128,7 +128,7 @@ const getAllPermission = async (req, res) => {
     // Đếm số lượng permissions để tính tổng số trang
     const totalCount = await Permissions.countDocuments(searchConditions);
 
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Thành công",
       totalCount: totalCount,
@@ -160,12 +160,11 @@ const getAllPermissionName = async (req, res) => {
 
     if (!permissionsAll) {
       return res
-        .status(401)
-        .json({ success: false, message: "Chưa có quyền nào được tạo!" });
+        .status(404)
+        .json({ success: false, message: "Quyền không tồn tại" });
     }
 
-    console.log(permissionsAll);
-    res.json({ success: true, message: "Thành công", data: names });
+    res.status(200).json({ success: true, message: "Thành công", data: names });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: "Dịch vụ bị gián đoạn" });
@@ -187,8 +186,8 @@ const updatePermission = async (req, res) => {
     req.body;
   if (!name) {
     return res
-      .status(400)
-      .json({ success: false, message: "Vui lòng nhập tên quyền" });
+      .status(422)
+      .json({ success: false, message: "Sai dữ liệu đầu vào" });
   }
 
   if (
@@ -202,7 +201,7 @@ const updatePermission = async (req, res) => {
     )
   ) {
     return res
-      .status(400)
+      .status(422)
       .json({ success: false, message: "Sai dữ liệu đầu vào" });
   }
   try {
@@ -210,7 +209,7 @@ const updatePermission = async (req, res) => {
     if (!permissionID) {
       return res
         .status(400)
-        .json({ success: false, message: "Mã quyền này sai" });
+        .json({ success: false, message: "ID quyền không hợp lệ" });
     }
     const existingPermission = await Permissions.findOne({
       name,
@@ -218,7 +217,7 @@ const updatePermission = async (req, res) => {
     });
     if (existingPermission) {
       return res
-        .status(400)
+        .status(404)
         .json({ success: false, message: "Tên quyền đã tồn tại" });
     }
     let updatePermission = {
@@ -237,7 +236,7 @@ const updatePermission = async (req, res) => {
       updatePermission,
       { new: true }
     );
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Cập nhật thành công!",
       data: newPermission,
@@ -251,25 +250,21 @@ const updatePermission = async (req, res) => {
 // xóa quyền
 const destroyPermission = async (req, res) => {
   // check quyen
-
   if (!req.permissions.permission.includes("delete")) {
     return res
       .status(401)
       .json({ success: false, message: "Tài khoản không có quyền truy cập" });
   }
-
-  // check quyen
-
   try {
     const deletePermission = await Permissions.findOneAndDelete({
       _id: req.params.id,
     });
     if (!deletePermission) {
       return res
-        .status(400)
+        .status(404)
         .json({ success: false, message: "Quyền này không tồn tại" });
     }
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Đã xóa thành công",
       data: deletePermission,

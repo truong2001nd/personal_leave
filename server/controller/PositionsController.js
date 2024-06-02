@@ -4,14 +4,14 @@ const Room = require("../models/Rooms.js");
 const createPositions = async (req, res) => {
   if (!req.permissions.position.includes("create")) {
     return res
-      .status(400)
+      .status(401)
       .json({ success: false, message: "Bạn không có quyền tạo chức vụ" });
   }
   const { name, room } = req.body;
   if (!name) {
-    return res.status(404).json({
+    return res.status(422).json({
       success: false,
-      message: "Vui lòng cung cấp tên chức vụ !",
+      message: "Sai dữ liệu đầu vào",
     });
   }
   if (!room) {
@@ -23,9 +23,9 @@ const createPositions = async (req, res) => {
   try {
     let roomObject = await Room.findById(room);
     if (!roomObject) {
-      return res.status(404).json({
+      return res.status(400).json({
         success: false,
-        message: "Không tìm thấy phòng ban với mã đã cho!",
+        message: "ID phòng ban không hợp lệ",
       });
     }
 
@@ -48,7 +48,7 @@ const createPositions = async (req, res) => {
     });
 
     await newPosition.save();
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Thành công",
       data: newPosition,
@@ -61,7 +61,7 @@ const createPositions = async (req, res) => {
 const getAllPosition = async (req, res) => {
   if (!req.permissions.position.includes("read")) {
     return res
-      .status(400)
+      .status(401)
       .json({ success: false, message: "Bạn không có quyền xem chức vụ" });
   }
 
@@ -99,7 +99,7 @@ const getAllPosition = async (req, res) => {
 const getOnePosition = async (req, res) => {
   if (!req.permissions.position.includes("read")) {
     return res
-      .status(400)
+      .status(401)
       .json({ success: false, message: "Bạn không có quyền xem chức vụ" });
   }
   try {
@@ -128,16 +128,16 @@ const updatePosition = async (req, res) => {
   const { name, room } = req.body;
   if (!name) {
     return res
-      .status(400)
-      .json({ success: false, message: "Vui lòng nhập tên chức vụ" });
+      .status(422)
+      .json({ success: false, message: "Sai dữ liệu đầu vào" });
   }
 
   try {
     const roomObject = await Room.findById(room).lean();
     if (!roomObject) {
       return res
-        .status(404)
-        .json({ success: false, message: "Sai mã phòng ban!" });
+        .status(400)
+        .json({ success: false, message: "ID Phòng ban không hợp lệ" });
     }
     let updatePosition = { name, room: roomObject._id };
 
@@ -150,9 +150,9 @@ const updatePosition = async (req, res) => {
     if (!positionId) {
       return res
         .status(400)
-        .json({ success: false, message: "Mã chức vụ này sai!" });
+        .json({ success: false, message: "ID Chức vụ không hợp lệ" });
     }
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Cập nhật thành công!",
       data: updatePosition,
@@ -177,7 +177,7 @@ const deletePosition = async (req, res) => {
     if (!deletePosition) {
       return res
         .status(400)
-        .json({ success: false, message: "Sai mã Id chức vụ" });
+        .json({ success: false, message: "ID chức vụ sai" });
     }
     res.status(200).json({
       success: true,

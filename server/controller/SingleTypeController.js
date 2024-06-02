@@ -8,9 +8,9 @@ const createSingleType = async (req, res, next) => {
   }
   const { name, content } = req.body;
   if (!name || !content) {
-    return res.status(400).json({
+    return res.status(422).json({
       success: false,
-      message: "Vui lòng nhập tên loại đơn hoặc content",
+      message: "Sai dữ liệu đầu vào",
     });
   }
   try {
@@ -18,7 +18,7 @@ const createSingleType = async (req, res, next) => {
 
     if (singleTypeRelease) {
       return res
-        .status(401)
+        .status(409)
         .json({ success: false, message: "Loại đơn đã tồn tại" });
     }
     const newSingleType = new SingleType({
@@ -29,7 +29,7 @@ const createSingleType = async (req, res, next) => {
 
     await newSingleType.save();
 
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Thành công",
       data: newSingleType,
@@ -50,16 +50,14 @@ const getOneSingleType = async (req, res) => {
       .json({ success: false, message: "Tài khoản không có quyền truy cập" });
   }
 
-  // check quyen
-
   try {
     const singleTypeOne = await SingleType.findOne({ _id: req.params.id });
     if (!singleTypeOne) {
       return res
-        .status(400)
+        .status(404)
         .json({ success: false, message: "Mã loại đơn này không tồn tại" });
     }
-    res.json({ success: true, data: singleTypeOne });
+    res.status(200).json({ success: true, data: singleTypeOne });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: "Dịch vụ bị gián đoạn" });
@@ -101,7 +99,7 @@ const getAllSingleType = async (req, res) => {
         .json({ success: false, message: "Chưa có đơn nào được tạo!" });
     }
 
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Thành công",
       totalCount: totalCount,
@@ -126,15 +124,15 @@ const updateSingleType = async (req, res) => {
   const { name, content, status } = req.body;
   if (!name) {
     return res
-      .status(400)
-      .json({ success: false, message: "Vui lòng nhập tên loại đơn" });
+      .status(422)
+      .json({ success: false, message: "Sai dữ liệu đầu vào" });
   }
   try {
     const singleTypeId = await SingleType.findOne({ _id: req.params.id });
     if (!singleTypeId) {
       return res
         .status(400)
-        .json({ success: false, message: "Mã loại đơn này sai" });
+        .json({ success: false, message: "Id loại Đơn không hợp lệ" });
     }
     const existingSingleType = await SingleType.findOne({
       name,
@@ -142,7 +140,7 @@ const updateSingleType = async (req, res) => {
     });
     if (existingSingleType) {
       return res
-        .status(400)
+        .status(404)
         .json({ success: false, message: "Tên loại đơn đã tồn tại" });
     }
     let updateSingleType = {
@@ -156,7 +154,7 @@ const updateSingleType = async (req, res) => {
       updateSingleType,
       { new: true }
     );
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Cập nhật thành công!",
       data: newSingleTypeId,
@@ -186,7 +184,7 @@ const destroySingleType = async (req, res) => {
         .status(400)
         .json({ success: false, message: "Loại đơn này không tồn tại" });
     }
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Đã xóa thành công",
       data: deleteSingleType,
