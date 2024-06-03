@@ -13,9 +13,6 @@ const RootRouter = () => {
     authState: { authLoading, isAuthenticated },
   } = useContext(AuthContext);
 
-  console.log("authLoading", authLoading);
-  console.log("isAuthenticated", isAuthenticated);
-
   let body = "";
   if (authLoading) {
     body = <Loading />;
@@ -25,6 +22,7 @@ const RootRouter = () => {
         <DefaultLayout>
           <Routes>
             <Route path={config.urls.home} element={<Home />} />
+            <Route path="*" element={<Navigate to={config.urls.home} />} />
           </Routes>
         </DefaultLayout>
       );

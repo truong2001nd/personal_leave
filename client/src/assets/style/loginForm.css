@@ -1,0 +1,18 @@
+
+.container {
+    margin-top: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .custom-form-group {
+    width: 50%;
+    margin-bottom: 15px; /* Khoảng cách giữa các Form.Group */
+  }
+  
+  .title-form-group {
+    font-size: 24px; /* Đặt kích thước font */
+    font-weight: bold; /* Đặt độ đậm của font */
+  }
+  

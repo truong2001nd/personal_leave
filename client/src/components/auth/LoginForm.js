@@ -3,6 +3,7 @@ import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import { useState, useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
+import "../../assets/style/loginForm.css";
 
 const LoginForm = () => {
   // Context
@@ -32,8 +33,12 @@ const LoginForm = () => {
     }
   };
   return (
-    <Form className="my-4" onSubmit={login}>
-      <Form.Group style={{ margin: 10 }}>
+    <Form className="container" onSubmit={login}>
+      <Form.Group className="title-form-group">
+        <Form.Label>Đăng nhập </Form.Label>
+      </Form.Group>
+      <Form.Group className="custom-form-group">
+        <Form.Label>Emali: </Form.Label>
         <Form.Control
           type="text"
           placeholder="email"
@@ -43,7 +48,8 @@ const LoginForm = () => {
           onChange={onChangeLoginForm}
         />
       </Form.Group>
-      <Form.Group style={{ margin: 10 }}>
+      <Form.Group className="custom-form-group">
+        <Form.Label>Mật khẩu: </Form.Label>
         <Form.Control
           type="password"
           placeholder="Password"
@@ -53,7 +59,7 @@ const LoginForm = () => {
           onChange={onChangeLoginForm}
         />
       </Form.Group>
-      <Button variant="success" type="submit">
+      <Button variant="success" className="d-block mx-auto" type="submit">
         Login
       </Button>
     </Form>

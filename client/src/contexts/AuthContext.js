@@ -23,6 +23,7 @@ const AuthContextProvider = ({ children }) => {
       }
 
       const response = await axios.get(`${apiUrl}/users/loadUser`);
+      console.log(response);
       if (response.data.status === 200) {
         dispatch({
           type: "SET_AUTH",
@@ -45,6 +46,7 @@ const AuthContextProvider = ({ children }) => {
   const loginUser = async (userForm) => {
     try {
       const response = await axios.post(`${apiUrl}/users/login`, userForm);
+      console.log("ada", response);
       if (response.data.status === 200) {
         localStorage.setItem(LOCAL_STORAGE_TOKEN_NAME, response.data.token);
       } else {
