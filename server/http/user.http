@@ -17,8 +17,8 @@ POST http://localhost:5000/api/users/login
 Content-Type: application/json
 
 {
-    "email":"pvtbotdy2k1@gmail.com",
-    "password":"DAE871"
+    "email":"admin@gmail.com",
+    "password":"123"
 }
 ###
 Put http://localhost:5000/api/users/update/651d0ce00c3c16a4fcd21826
@@ -53,3 +53,8 @@ Content-Type: application/json
 POST http://localhost:5000/api/users/logout
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjU1OGQ4ODdhMDBiNGRhMjkyMmM3OTkiLCJ1c2VyTmFtZSI6InB2dGJvdGR5IiwicGVybWlzc2lvbnMiOnsiX2lkIjoiNjUxZDM1ZGYzNGVkNjhkNDFiYjFkOWJjIiwibmFtZSI6IlF14bqjbiBsw70gY2jhu6ljIHYiLCJzdGF0dXMiOjEsInBlcm1pc3Npb24iOlsicmVhZCJdLCJwb3NpdGlvbiI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInJvb20iOlsicmVhZCJdLCJzaW5nbGUiOlsicmVhZCJdLCJzaW5nbGVUeXBlIjpbInJlYWQiXSwidXNlciI6WyJyZWFkIiwidXBkYXRlIl0sImNyZWF0ZWRBdCI6IjIwMjMtMTAtMDRUMDk6NTI6MzEuMjgwWiIsInVwZGF0ZWRBdCI6IjIwMjMtMTAtMDZUMDg6MjA6NTAuMTM5WiIsIl9fdiI6MH0sImlhdCI6MTcxNjk1ODYzMCwiZXhwIjoxNzE3MDQ1MDMwfQ.jAGhIQ3yCmZLn3-ToDNCqrIETpRUL9V2SrpU7CU7-cE
+
+###
+GET  http://localhost:5000/api/users/loadUser
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjNmYjkyYTRlZTAxYjRiYzcyNDBkYWEiLCJ1c2VyTmFtZSI6ImFkbWluIiwicGVybWlzc2lvbnMiOnsicGVybWlzc2lvbiI6W10sInBvc2l0aW9uIjpbXSwicm9vbSI6W10sInNpbmdsZSI6W10sInNpbmdsZVR5cGUiOltdLCJ1c2VyIjpbXSwiX2lkIjoiNjYzZmJhMTc0ZWUwMWI0YmM3MjQ5ZTM1IiwibmFtZSI6IlBow7JuZyAxIiwiZGVzY3JpcHRpb24iOiIiLCJjcmVhdGVkQXQiOiIyMDIzLTEwLTA0VDAzOjEzOjE4LjIzOVoiLCJ1cGRhdGVkQXQiOiIyMDIzLTEwLTA0VDAzOjEzOjE4LjIzOVoiLCJfX3YiOjB9LCJpYXQiOjE3MTczMjc3NjR9.G8Ht2iShEzX8GVlt0nL38k1adsYCVc5vS7VlRcPC2H8

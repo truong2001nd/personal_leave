@@ -14,21 +14,21 @@ const sendMail = require("../helper/sendMail.js");
 const loadUser = async (req, res) => {
   try {
     const user = await User.findById(req.userId).select("-password");
-    if (!user)
-      return res.status(400).json({ status: 400, message: "User not found" });
+    if (!user) return res.json({ status: 400, message: "User not found" });
     res.json({ status: 200, data: user });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ status: 500, message: "Internal server error" });
+    res.json({ status: 500, message: "Dịch vụ tạm thời giám đoạn" });
   }
 };
 
 // thêm mới tài khoản
 const register = async (req, res, next) => {
   if (!req.permissions.user.includes("create")) {
-    return res
-      .status(401)
-      .json({ status: 401, message: "Tài khoản không có quyền truy cập" });
+    return res.json({
+      status: 401,
+      message: "Tài khoản không có quyền truy cập",
+    });
   }
 
   const {
@@ -43,39 +43,31 @@ const register = async (req, res, next) => {
     birthday,
   } = req.body;
   if (!name || !email || !password || !permissions) {
-    return res
-      .status(422)
-      .json({ status: 422, message: "Sai dữ liệu đầu vào" });
+    return res.json({ status: 422, message: "Sai dữ liệu đầu vào" });
   }
 
   try {
     const userRelease = await User.findOne({ email });
 
     if (userRelease) {
-      return res.status(409).json({ status: 409, message: "Email đã tồn tại" });
+      return res.json({ status: 409, message: "Email đã tồn tại" });
     }
 
     const roomRelease = await Room.findOne({ _id: room });
 
     if (!roomRelease) {
-      return res
-        .status(400)
-        .json({ status: 400, message: "Không tồn tại phòng ban" });
+      return res.json({ status: 400, message: "Không tồn tại phòng ban" });
     }
 
     const permissionRelease = await Permissions.findOne({ _id: permissions });
 
     if (!permissionRelease) {
-      return res
-        .status(400)
-        .json({ status: 400, message: "Không tồn tại quyền" });
+      return res.json({ status: 400, message: "Không tồn tại quyền" });
     }
 
     const positionRelease = await Position.findOne({ _id: positions });
     if (!positionRelease) {
-      return res
-        .status(400)
-        .json({ status: 400, message: "Không tồn tại chức vụ" });
+      return res.json({ status: 400, message: "Không tồn tại chức vụ" });
     }
 
     // ma hoa mk
@@ -95,9 +87,7 @@ const register = async (req, res, next) => {
 
     await newUser.save();
     if (!(await newUser.save())) {
-      return res
-        .status(500)
-        .json({ status: 500, message: "Tạo tài khoản thất bại!" });
+      return res.json({ status: 400, message: "Tạo tài khoản thất bại!" });
     }
 
     await sendMail({
@@ -107,15 +97,13 @@ const register = async (req, res, next) => {
             <li>Mật Khẩu : ${password}</li>  
       `,
     });
-    res.status(200).json({
+    res.json({
       status: 200,
       message: "Thành công",
     });
   } catch (error) {
     console.log(error);
-    res
-      .status(500)
-      .json({ status: 500, message: "Dịch vụ tạm thời giám đoạn" });
+    res.json({ status: 500, message: "Dịch vụ tạm thời giám đoạn" });
   }
 };
 
@@ -123,26 +111,23 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    return res
-      .status(400)
-      .json({ status: 400, message: "Vui lòng nhập email và mật khẩu" });
+    return res.json({
+      status: 400,
+      message: "Vui lòng nhập email và mật khẩu",
+    });
   }
 
   try {
     const userRelease = await User.findOne({ email }).populate("permissions");
 
     if (!userRelease) {
-      return res
-        .status(404)
-        .json({ status: 400, message: "Không tồn tại tài khoản" });
+      return res.json({ status: 400, message: "Không tồn tại tài khoản" });
     }
 
     // ma hoa mk
     const passwordValid = await argon2.verify(userRelease.password, password);
     if (!passwordValid)
-      return res
-        .status(400)
-        .json({ status: 400, message: "Sai tài khoản hoặc mật khẩu" });
+      return res.json({ status: 400, message: "Sai tài khoản hoặc mật khẩu" });
 
     // return token
     const accessToken = jwt.sign(
@@ -154,23 +139,21 @@ const login = async (req, res, next) => {
       process.env.ACCESS_TOKEN_SECRET
     );
 
-    res.status(200).json({
+    res.json({
       status: 200,
       message: "Thành công",
       token: accessToken,
     });
   } catch (error) {
     console.log(error);
-    res
-      .status(500)
-      .json({ status: 500, message: "Dịch vụ tạm thời giám đoạn" });
+    res.json({ status: 500, message: "Dịch vụ tạm thời giám đoạn" });
   }
 };
 
 // Chỉnh sửa tài khoản
 const updateUser = async (req, res, next) => {
   if (!req.permissions.user.includes("update")) {
-    return res.status(401).json({
+    return res.json({
       status: 401,
       message: "Tài khoản không  có quyền sửa đổi thông tin",
     });
@@ -185,16 +168,12 @@ const updateUser = async (req, res, next) => {
     birthday,
   } = req.body;
   if (!name || !email || !password) {
-    return res
-      .status(400)
-      .json({ status: 400, message: "Sai dữ liệu đầu vào" });
+    return res.json({ status: 400, message: "Sai dữ liệu đầu vào" });
   }
   try {
     // kiểm tra id có trùng khớp khônmg
     if (!(req.userId === req.params.id)) {
-      return res
-        .status(400)
-        .json({ status: 400, message: "ID người dùng không hợp lệ" });
+      return res.json({ status: 400, message: "ID người dùng không hợp lệ" });
     }
     // kiểm tra xem email sửa đã tôn tại chưa và trừ trùng với tk cần sửa
     const existingUser = await User.findOne({
@@ -202,9 +181,7 @@ const updateUser = async (req, res, next) => {
       _id: { $ne: req.params.id },
     });
     if (existingUser) {
-      return res
-        .status(400)
-        .json({ status: 400, message: " Email đã tồn tại" });
+      return res.json({ status: 400, message: " Email đã tồn tại" });
     }
 
     const hashedPassword = await argon2.hash(password);
@@ -222,14 +199,14 @@ const updateUser = async (req, res, next) => {
       updateUser,
       { new: true }
     );
-    res.status(200).json({
+    res.json({
       status: 200,
       message: "Cập nhật thành công!",
       data: newUser,
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ status: 500, message: "Dịch vụ bị gián đoạn" });
+    res.json({ status: 500, message: "Dịch vụ bị gián đoạn" });
   }
 };
 
@@ -245,15 +222,13 @@ const getAllUsers = async (req, res, next) => {
     }));
 
     if (!userAll) {
-      return res
-        .status(401)
-        .json({ status: 401, message: "Chưa có quyền nào được tạo!" });
+      return res.json({ status: 401, message: "Chưa có quyền nào được tạo!" });
     }
 
-    res.status(200).json({ status: 200, message: "Thành công", data: names });
+    res.json({ status: 200, message: "Thành công", data: names });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ status: 500, message: "Dịch vụ bị gián đoạn" });
+    res.json({ status: 500, message: "Dịch vụ bị gián đoạn" });
   }
 };
 
@@ -261,9 +236,7 @@ const getAllUsers = async (req, res, next) => {
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
   if (!email) {
-    return res
-      .status(400)
-      .json({ status: 400, message: "Sai dữ liệu đầu vào" });
+    return res.json({ status: 400, message: "Sai dữ liệu đầu vào" });
   }
   try {
     const existingUser = await User.findOne({
@@ -271,9 +244,7 @@ const forgotPassword = async (req, res) => {
     });
 
     if (!existingUser) {
-      return res
-        .status(400)
-        .json({ status: 400, message: "Email không tồn tại!" });
+      return res.json({ status: 400, message: "Email không tồn tại!" });
     }
     // Tạo mật khẩu ngẫu nhiên
     const newPassword = crypto.randomBytes(3).toString("hex").toUpperCase();
@@ -285,15 +256,13 @@ const forgotPassword = async (req, res) => {
       { password: hashedPassword },
       { new: true }
     );
-    res.status(200).json({
+    res.json({
       status: 200,
       message: "Thành công!",
     });
 
     if (!updatedUser) {
-      return res
-        .status(400)
-        .json({ status: 400, message: "Cập nhật mật khẩu thất bại!" });
+      return res.json({ status: 400, message: "Cập nhật mật khẩu thất bại!" });
     }
     await sendMail({
       email: email,
@@ -303,14 +272,14 @@ const forgotPassword = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ status: 500, message: "Dịch vụ bị gián đoạn" });
+    res.json({ status: 500, message: "Dịch vụ bị gián đoạn" });
   }
 };
 
 const disableAccount = async (req, res) => {
   // check quyen
   if (!req.permissions.User.includes("delete")) {
-    return res.status(401).json({
+    return res.json({
       status: 401,
       message: "Tài khoản không có quyền xóa tài khoản",
     });
@@ -320,18 +289,16 @@ const disableAccount = async (req, res) => {
       _id: req.params.id,
     });
     if (!deleteUser) {
-      return res
-        .status(400)
-        .json({ status: 400, message: "ID người dùng không hợp lệ" });
+      return res.json({ status: 400, message: "ID người dùng không hợp lệ" });
     }
-    res.status(200).json({
+    res.json({
       status: 200,
       message: "Đã xóa thành công",
       data: deletePermission,
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ status: 500, message: "Dịch vụ bị gián đoạn" });
+    res.json({ status: 500, message: "Dịch vụ bị gián đoạn" });
   }
 };
 
