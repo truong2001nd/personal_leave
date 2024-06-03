@@ -5,9 +5,10 @@ const createPermission = async (req, res, next) => {
   // check quyen
 
   if (!req.permissions.permission.includes("create")) {
-    return res
-      .status(401)
-      .json({ success: false, message: "Tài khoản không có quyền truy cập" });
+    return res.json({
+      status: 401,
+      message: "Tài khoản không có quyền truy cập",
+    });
   }
 
   // check quyen
@@ -15,9 +16,7 @@ const createPermission = async (req, res, next) => {
   const { name, permission, position, room, single, singleType, user, status } =
     req.body;
   if (!name) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Vui lòng nhập tên quyền" });
+    return res.json({ status: 400, message: "Vui lòng nhập tên quyền" });
   }
 
   if (
@@ -30,18 +29,14 @@ const createPermission = async (req, res, next) => {
       Array.isArray(user)
     )
   ) {
-    return res
-      .status(422)
-      .json({ success: false, message: "Sai dữ liệu đầu vào" });
+    return res.json({ status: 422, message: "Sai dữ liệu đầu vào" });
   }
 
   try {
     const permissionRelease = await Permissions.findOne({ name });
 
     if (permissionRelease) {
-      return res
-        .status(409)
-        .json({ success: false, message: "Tên quyền đã tồn tại" });
+      return res.json({ status: 400, message: "Tên quyền đã tồn tại" });
     }
 
     const newPermission = new Permissions({
@@ -57,16 +52,14 @@ const createPermission = async (req, res, next) => {
 
     await newPermission.save();
 
-    res.status(200).json({
-      success: true,
+    res.json({
+      status: 200,
       message: "Thành công",
       data: newPermission,
     });
   } catch (error) {
     console.log(error);
-    res
-      .status(500)
-      .json({ success: false, message: "Dịch vụ tạm thời giám đoạn" });
+    res.json({ status: 500, message: "Dịch vụ tạm thời giám đoạn" });
   }
 };
 
@@ -75,9 +68,10 @@ const getOnePermission = async (req, res) => {
   // check quyen
 
   if (!req.permissions.permission.includes("read")) {
-    return res
-      .status(401)
-      .json({ success: false, message: "Tài khoản không có quyền truy cập" });
+    return res.json({
+      status: 401,
+      message: "Tài khoản không có quyền truy cập",
+    });
   }
 
   // check quyen
@@ -85,14 +79,12 @@ const getOnePermission = async (req, res) => {
   try {
     const permissionOne = await Permissions.findOne({ _id: req.params.id });
     if (!permissionOne) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Quyền này không tồn tại" });
+      return res.json({ status: 400, message: "Quyền này không tồn tại" });
     }
-    res.json({ success: true, message: "Thành công", data: permissionOne });
+    res.json({ status: 200, message: "Thành công", data: permissionOne });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Dịch vụ bị gián đoạn" });
+    res.json({ status: 500, message: "Dịch vụ bị gián đoạn" });
   }
 };
 
@@ -102,9 +94,10 @@ const getAllPermission = async (req, res) => {
 
   // Check quyền
   if (!req.permissions.permission.includes("read")) {
-    return res
-      .status(401)
-      .json({ success: false, message: "Tài khoản không có quyền truy cập" });
+    return res.json({
+      status: 401,
+      message: "Tài khoản không có quyền truy cập",
+    });
   }
 
   // Định nghĩa các tham số truy vấn
@@ -128,15 +121,15 @@ const getAllPermission = async (req, res) => {
     // Đếm số lượng permissions để tính tổng số trang
     const totalCount = await Permissions.countDocuments(searchConditions);
 
-    res.status(200).json({
-      success: true,
+    res.json({
+      status: 200,
       message: "Thành công",
       totalCount: totalCount,
       data: permissionsAll,
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Dịch vụ bị gián đoạn" });
+    res.json({ status: 500, message: "Dịch vụ bị gián đoạn" });
   }
 };
 
@@ -144,9 +137,10 @@ const getAllPermissionName = async (req, res) => {
   // check quyen
 
   if (!req.permissions.permission.includes("read")) {
-    return res
-      .status(401)
-      .json({ success: false, message: "Tài khoản không có quyền truy cập" });
+    return res.json({
+      status: 401,
+      message: "Tài khoản không có quyền truy cập",
+    });
   }
 
   // check quyen
@@ -159,15 +153,13 @@ const getAllPermissionName = async (req, res) => {
     }));
 
     if (!permissionsAll) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Quyền không tồn tại" });
+      return res.json({ status: 400, message: "Quyền không tồn tại" });
     }
 
-    res.status(200).json({ success: true, message: "Thành công", data: names });
+    res.json({ status: 200, message: "Thành công", data: names });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Dịch vụ bị gián đoạn" });
+    res.json({ status: 500, message: "Dịch vụ bị gián đoạn" });
   }
 };
 // sửa quyền
@@ -175,9 +167,10 @@ const updatePermission = async (req, res) => {
   // check quyen
 
   if (!req.permissions.permission.includes("update")) {
-    return res
-      .status(401)
-      .json({ success: false, message: "Tài khoản không có quyền truy cập" });
+    return res.json({
+      status: 401,
+      message: "Tài khoản không có quyền truy cập",
+    });
   }
 
   // check quyen
@@ -185,9 +178,7 @@ const updatePermission = async (req, res) => {
   const { name, permission, position, room, single, singleType, user, status } =
     req.body;
   if (!name) {
-    return res
-      .status(422)
-      .json({ success: false, message: "Sai dữ liệu đầu vào" });
+    return res.json({ status: 422, message: "Sai dữ liệu đầu vào" });
   }
 
   if (
@@ -200,25 +191,19 @@ const updatePermission = async (req, res) => {
       Array.isArray(user)
     )
   ) {
-    return res
-      .status(422)
-      .json({ success: false, message: "Sai dữ liệu đầu vào" });
+    return res.json({ status: 422, message: "Sai dữ liệu đầu vào" });
   }
   try {
     const permissionID = await Permissions.findOne({ _id: req.params.id });
     if (!permissionID) {
-      return res
-        .status(400)
-        .json({ success: false, message: "ID quyền không hợp lệ" });
+      return res.json({ status: 400, message: "ID quyền không hợp lệ" });
     }
     const existingPermission = await Permissions.findOne({
       name,
       _id: { $ne: req.params.id },
     });
     if (existingPermission) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Tên quyền đã tồn tại" });
+      return res.json({ status: 400, message: "Tên quyền đã tồn tại" });
     }
     let updatePermission = {
       name,
@@ -236,14 +221,14 @@ const updatePermission = async (req, res) => {
       updatePermission,
       { new: true }
     );
-    res.status(200).json({
-      success: true,
+    res.json({
+      status: 200,
       message: "Cập nhật thành công!",
       data: newPermission,
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Dịch vụ bị gián đoạn" });
+    res.json({ status: 500, message: "Dịch vụ bị gián đoạn" });
   }
 };
 
@@ -251,27 +236,26 @@ const updatePermission = async (req, res) => {
 const destroyPermission = async (req, res) => {
   // check quyen
   if (!req.permissions.permission.includes("delete")) {
-    return res
-      .status(401)
-      .json({ success: false, message: "Tài khoản không có quyền truy cập" });
+    return res.json({
+      status: 401,
+      message: "Tài khoản không có quyền truy cập",
+    });
   }
   try {
     const deletePermission = await Permissions.findOneAndDelete({
       _id: req.params.id,
     });
     if (!deletePermission) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Quyền này không tồn tại" });
+      return res.json({ status: 400, message: "Quyền này không tồn tại" });
     }
-    res.status(200).json({
-      success: true,
+    res.json({
+      status: 200,
       message: "Đã xóa thành công",
       data: deletePermission,
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Dịch vụ bị gián đoạn" });
+    res.json({ status: 500, message: "Dịch vụ bị gián đoạn" });
   }
 };
 

@@ -2,14 +2,15 @@ const SingleType = require("../models/SingleTypes.js");
 
 const createSingleType = async (req, res, next) => {
   if (!req.permissions.singleType.includes("create")) {
-    return res
-      .status(401)
-      .json({ success: false, message: "Tài khoản không có quyền truy cập" });
+    return res.json({
+      status: 401,
+      message: "Tài khoản không có quyền truy cập",
+    });
   }
   const { name, content } = req.body;
   if (!name || !content) {
-    return res.status(422).json({
-      success: false,
+    return res.json({
+      success: 422,
       message: "Sai dữ liệu đầu vào",
     });
   }
@@ -17,9 +18,7 @@ const createSingleType = async (req, res, next) => {
     const singleTypeRelease = await SingleType.findOne({ name });
 
     if (singleTypeRelease) {
-      return res
-        .status(409)
-        .json({ success: false, message: "Loại đơn đã tồn tại" });
+      return res.json({ status: 409, message: "Loại đơn đã tồn tại" });
     }
     const newSingleType = new SingleType({
       name,
@@ -29,47 +28,48 @@ const createSingleType = async (req, res, next) => {
 
     await newSingleType.save();
 
-    res.status(200).json({
-      success: true,
+    res.json({
+      status: 200,
       message: "Thành công",
       data: newSingleType,
     });
   } catch (error) {
     console.log(error);
-    res
-      .status(500)
-      .json({ success: false, message: "Dịch vụ tạm thời giám đoạn" });
+    res.json({ success: 500, message: "Dịch vụ tạm thời giám đoạn" });
   }
 };
 const getOneSingleType = async (req, res) => {
   // check quyen
 
   if (!req.permissions.singleType.includes("read")) {
-    return res
-      .status(401)
-      .json({ success: false, message: "Tài khoản không có quyền truy cập" });
+    return res.json({
+      status: 401,
+      message: "Tài khoản không có quyền truy cập",
+    });
   }
 
   try {
     const singleTypeOne = await SingleType.findOne({ _id: req.params.id });
     if (!singleTypeOne) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Mã loại đơn này không tồn tại" });
+      return res.json({
+        status: 404,
+        message: "Mã loại đơn này không tồn tại",
+      });
     }
-    res.status(200).json({ success: true, data: singleTypeOne });
+    res.json({ status: 200, data: singleTypeOne });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Dịch vụ bị gián đoạn" });
+    res.json({ status: 500, message: "Dịch vụ bị gián đoạn" });
   }
 };
 const getAllSingleType = async (req, res) => {
   // check quyen
 
   if (!req.permissions.singleType.includes("read")) {
-    return res
-      .status(401)
-      .json({ success: false, message: "Tài khoản không có quyền truy cập" });
+    return res.json({
+      status: 401,
+      message: "Tài khoản không có quyền truy cập",
+    });
   }
 
   // check quyen
@@ -94,54 +94,47 @@ const getAllSingleType = async (req, res) => {
     const totalCount = await SingleType.countDocuments(searchConditions);
 
     if (!singleTypeAll) {
-      return res
-        .status(401)
-        .json({ success: false, message: "Chưa có đơn nào được tạo!" });
+      return res.json({ status: 401, message: "Chưa có đơn nào được tạo!" });
     }
 
-    res.status(200).json({
-      success: true,
+    res.json({
+      status: 200,
       message: "Thành công",
       totalCount: totalCount,
       data: singleTypeAll,
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Dịch vụ bị gián đoạn" });
+    res.json({ status: 500, message: "Dịch vụ bị gián đoạn" });
   }
 };
 const updateSingleType = async (req, res) => {
   // check quyen
 
   if (!req.permissions.singleType.includes("update")) {
-    return res
-      .status(401)
-      .json({ success: false, message: "Tài khoản không có quyền truy cập" });
+    return res.json({
+      status: 401,
+      message: "Tài khoản không có quyền truy cập",
+    });
   }
 
   // check quyen
 
   const { name, content, status } = req.body;
   if (!name) {
-    return res
-      .status(422)
-      .json({ success: false, message: "Sai dữ liệu đầu vào" });
+    return res.json({ status: 422, message: "Sai dữ liệu đầu vào" });
   }
   try {
     const singleTypeId = await SingleType.findOne({ _id: req.params.id });
     if (!singleTypeId) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Id loại Đơn không hợp lệ" });
+      return res.json({ status: 400, message: "Id loại Đơn không hợp lệ" });
     }
     const existingSingleType = await SingleType.findOne({
       name,
       _id: { $ne: req.params.id },
     });
     if (existingSingleType) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Tên loại đơn đã tồn tại" });
+      return res.json({ status: 400, message: "Tên loại đơn đã tồn tại" });
     }
     let updateSingleType = {
       name,
@@ -154,23 +147,24 @@ const updateSingleType = async (req, res) => {
       updateSingleType,
       { new: true }
     );
-    res.status(200).json({
-      success: true,
+    re.json({
+      status: 200,
       message: "Cập nhật thành công!",
       data: newSingleTypeId,
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Dịch vụ bị gián đoạn" });
+    res.json({ status: 500, message: "Dịch vụ bị gián đoạn" });
   }
 };
 const destroySingleType = async (req, res) => {
   // check quyen
 
   if (!req.permissions.singleType.includes("delete")) {
-    return res
-      .status(401)
-      .json({ success: false, message: "Tài khoản không có quyền truy cập" });
+    return res.json({
+      status: 401,
+      message: "Tài khoản không có quyền truy cập",
+    });
   }
 
   // check quyen
@@ -180,18 +174,16 @@ const destroySingleType = async (req, res) => {
       _id: req.params.id,
     });
     if (!deleteSingleType) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Loại đơn này không tồn tại" });
+      return res.json({ status: 400, message: "Loại đơn này không tồn tại" });
     }
-    res.status(200).json({
-      success: true,
+    res.json({
+      status: 200,
       message: "Đã xóa thành công",
       data: deleteSingleType,
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Dịch vụ bị gián đoạn" });
+    res.json({ status: 500, message: "Dịch vụ bị gián đoạn" });
   }
 };
 
