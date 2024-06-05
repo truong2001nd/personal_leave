@@ -1,7 +1,6 @@
 import { createContext, useReducer, useEffect } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
-
 import authReducer from "../reducers/authReducer.js";
 import { apiUrl, LOCAL_STORAGE_TOKEN_NAME } from "./constants.js";
 import setAuthToken from "../utils/setAuthToken";
@@ -23,11 +22,11 @@ const AuthContextProvider = ({ children }) => {
       }
 
       const response = await axios.get(`${apiUrl}/users/loadUser`);
-      console.log(response);
+
       if (response.data.status === 200) {
         dispatch({
           type: "SET_AUTH",
-          payload: { isAuthenticated: true, user: response.data.user },
+          payload: { isAuthenticated: true, user: response.data.data },
         });
       }
     } catch (error) {
@@ -46,7 +45,7 @@ const AuthContextProvider = ({ children }) => {
   const loginUser = async (userForm) => {
     try {
       const response = await axios.post(`${apiUrl}/users/login`, userForm);
-      console.log("ada", response);
+
       if (response.data.status === 200) {
         localStorage.setItem(LOCAL_STORAGE_TOKEN_NAME, response.data.token);
       } else {
@@ -61,9 +60,9 @@ const AuthContextProvider = ({ children }) => {
       else return { success: false, message: error.message };
     }
   };
+
   // context data
   const authContextData = { loginUser, authState };
-
   //return
   return (
     <AuthContext.Provider value={authContextData}>

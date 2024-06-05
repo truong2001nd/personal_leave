@@ -13,7 +13,21 @@ const sendMail = require("../helper/sendMail.js");
 
 const loadUser = async (req, res) => {
   try {
-    const user = await User.findById(req.userId).select("-password");
+    const user = await User.findById(req.userId)
+      .populate({
+        path: "permissions",
+        select: "name",
+      })
+      .populate({
+        path: "room",
+        select: "name",
+      })
+      .populate({
+        path: "positions",
+        select: "name",
+      })
+      .select("-password");
+
     if (!user) return res.json({ status: 400, message: "User not found" });
     res.json({ status: 200, data: user });
   } catch (error) {
@@ -77,12 +91,12 @@ const register = async (req, res, next) => {
       name,
       email,
       password: hashedPassword,
-      permissions: permissions || "",
-      positions: positions || "",
-      room: room || "",
-      sex,
-      phone,
-      birthday,
+      permissions: permissionRelease,
+      positions: positionRelease,
+      room: positionRelease,
+      sex: sex || null,
+      phone: phone || null,
+      birthday: birthday || null,
     });
 
     await newUser.save();
@@ -100,6 +114,7 @@ const register = async (req, res, next) => {
     res.json({
       status: 200,
       message: "Thành công",
+      data: newUser,
     });
   } catch (error) {
     console.log(error);
@@ -158,18 +173,7 @@ const updateUser = async (req, res, next) => {
       message: "Tài khoản không  có quyền sửa đổi thông tin",
     });
   }
-  const {
-    name,
-    email,
-    password,
-
-    sex,
-    phone,
-    birthday,
-  } = req.body;
-  if (!name || !email || !password) {
-    return res.json({ status: 400, message: "Sai dữ liệu đầu vào" });
-  }
+  const { name, email, password, sex, phone, birthday } = req.body;
   try {
     // kiểm tra id có trùng khớp khônmg
     if (!(req.userId === req.params.id)) {
@@ -184,11 +188,9 @@ const updateUser = async (req, res, next) => {
       return res.json({ status: 400, message: " Email đã tồn tại" });
     }
 
-    const hashedPassword = await argon2.hash(password);
     let updateUser = {
       name,
       email,
-      password: hashedPassword,
       sex: sex || 1,
       phone: phone || "",
       birthday: birthday || "",
@@ -218,14 +220,30 @@ const getAllUsers = async (req, res, next) => {
       _id: user._id,
       name: user.name,
       email: user.email,
-      password: user.password,
     }));
 
     if (!userAll) {
-      return res.json({ status: 401, message: "Chưa có quyền nào được tạo!" });
+      return res.json({
+        status: 401,
+        message: "Chưa có người dùng nào được tạo!",
+      });
     }
 
     res.json({ status: 200, message: "Thành công", data: names });
+  } catch (error) {
+    console.log(error);
+    res.json({ status: 500, message: "Dịch vụ bị gián đoạn" });
+  }
+};
+const getUser = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id).select("-password");
+
+    if (!user) {
+      return res.json({ status: 400, message: "id không tồn tại" });
+    }
+
+    res.json({ status: 200, message: "Thành công", data: user });
   } catch (error) {
     console.log(error);
     res.json({ status: 500, message: "Dịch vụ bị gián đoạn" });
@@ -310,4 +328,5 @@ module.exports = {
   forgotPassword,
   disableAccount,
   loadUser,
+  getUser,
 };

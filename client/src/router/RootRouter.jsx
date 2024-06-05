@@ -7,6 +7,8 @@ import config from "../config";
 import Login from "../views/Login/Login";
 import Home from "../views/Home/Home";
 import DefaultLayout from "../layout/DefaultLayout";
+import Account from "../views/account/account.js";
+
 
 const RootRouter = () => {
   const {
@@ -23,6 +25,8 @@ const RootRouter = () => {
           <Routes>
             <Route path={config.urls.home} element={<Home />} />
             <Route path="*" element={<Navigate to={config.urls.home} />} />
+            <Route path={config.urls.account} element={<Account />} />
+            
           </Routes>
         </DefaultLayout>
       );
