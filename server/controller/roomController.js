@@ -72,7 +72,7 @@ const getAllRoom = async (req, res) => {
   }
   try {
     const page = parseInt(req.query.page) || 1; // Trang hiện tại, mặc định là trang 1
-    const limit = parseInt(req.query.limit) || 6; // Số lượng mục trên mỗi trang, mặc định là 5
+    const limit = parseInt(req.query.limit) || 10; // Số lượng mục trên mỗi trang, mặc định là 5
     const search = req.query.search || ""; // Từ khóa tìm kiếm, mặc định là chuỗi rỗng
     const searchConditions = {};
     if (search) {
@@ -84,6 +84,14 @@ const getAllRoom = async (req, res) => {
     const roomAll = await Room.find(searchConditions)
       .skip((page - 1) * limit) // Bỏ qua các mục trước đó
       .limit(limit); // Giới hạn số lượng mục trả về trên mỗi trang
+
+    if (roomAll.length === 0) {
+      return res.json({
+        status: 400,
+        message: "Không tìm thấy phòng ban tương ứng",
+        data: roomAll,
+      });
+    }
 
     // Đếm số lượng Room để tính tổng số trang
     const totalCount = await Room.countDocuments(searchConditions);

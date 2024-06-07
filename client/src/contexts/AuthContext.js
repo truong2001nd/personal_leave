@@ -22,7 +22,7 @@ const AuthContextProvider = ({ children }) => {
       }
 
       const response = await axios.get(`${apiUrl}/users/loadUser`);
-      console.log("first", response.data);
+
       if (response.data.status === 200) {
         dispatch({
           type: "SET_AUTH",
@@ -69,6 +69,7 @@ const AuthContextProvider = ({ children }) => {
   };
 
   const logout = async () => {
+    localStorage.removeItem(LOCAL_STORAGE_TOKEN_NAME);
     setAuthToken(null);
     await loadUser();
   };

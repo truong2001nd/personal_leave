@@ -1,0 +1,10 @@
+.icon-wrapper {
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 335px;
+    background-color: bisque;
+    border: 1px solid  #e5ded6;
+  }
+  

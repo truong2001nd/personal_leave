@@ -6,6 +6,8 @@ import { AuthContext } from "../../contexts/AuthContext";
 import Modal from "react-bootstrap/Modal";
 import { toast } from "react-toastify";
 import { apiUpdateAccount, apiUpdatePassword } from "../../service/api/account";
+import { RxAvatar } from "react-icons/rx";
+import "../../assets/style/account.css";
 
 const Account = () => {
   const { authState, dispatch } = useContext(AuthContext);
@@ -104,12 +106,12 @@ const Account = () => {
   return (
     <Container fluid className="my-5">
       <Row className="d-flex justify-content-center">
-        <Col md={2}>
+        <Col md={3}>
           <Card>
-            <Card.Img variant="top" src="https://via.placeholder.com/150" />
+            <RxAvatar className="icon-wrapper" style={{ width: "100%" }} />
             <Card.Body>
-              <Card.Title>{user.name}</Card.Title>
-              <Card.Text> {user.positions.name}</Card.Text>
+              <Card.Title>Họ tên: Phạm văn trường</Card.Title>
+              <Card.Text> Chức vụ:{user.positions.name}</Card.Text>
             </Card.Body>
           </Card>
         </Col>
@@ -246,44 +248,46 @@ const Account = () => {
         <Modal.Header closeButton>
           <Modal.Title>Đổi mật khẩu</Modal.Title>
         </Modal.Header>
-        <form>
-          <div className="form-group">
-            <label htmlFor="name">Mật khẩu cũ:</label>
-            <input
-              type="text"
-              className="form-control"
-              id="password"
-              placeholder="Nhập mật khẩu cũ"
-              name="password"
-              value={dataPassword.password}
-              onChange={(e) =>
-                handleChangeFromData(
-                  "password",
-                  e.target.value,
-                  setDataPassword
-                )
-              }
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="email">Mật khẩu mới:</label>
-            <input
-              type="text"
-              className="form-control"
-              id="newPassword"
-              placeholder="Nhập mật khẩu mới"
-              name="newPassword"
-              value={dataPassword.newPassword}
-              onChange={(e) =>
-                handleChangeFromData(
-                  "newPassword",
-                  e.target.value,
-                  setDataPassword
-                )
-              }
-            />
-          </div>
-        </form>
+        <Modal.Body>
+          <form>
+            <div className="form-group">
+              <label htmlFor="password">Mật khẩu cũ:</label>
+              <input
+                type="text"
+                className="form-control"
+                id="password"
+                placeholder="Nhập mật khẩu cũ"
+                name="password"
+                value={dataPassword.password}
+                onChange={(e) =>
+                  handleChangeFromData(
+                    "password",
+                    e.target.value,
+                    setDataPassword
+                  )
+                }
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="newPassword">Mật khẩu mới:</label>
+              <input
+                type="text"
+                className="form-control"
+                id="newPassword"
+                placeholder="Nhập mật khẩu mới"
+                name="newPassword"
+                value={dataPassword.newPassword}
+                onChange={(e) =>
+                  handleChangeFromData(
+                    "newPassword",
+                    e.target.value,
+                    setDataPassword
+                  )
+                }
+              />
+            </div>
+          </form>
+        </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowPassword(false)}>
             Hủy
