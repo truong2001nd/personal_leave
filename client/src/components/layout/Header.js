@@ -1,34 +1,68 @@
-import React from "react";
+import React, { useContext } from "react";
 import "../../assets/style/header.css";
-import { Nav, Navbar, Container } from "react-bootstrap";
+import { FaRegUserCircle } from "react-icons/fa";
+import { SiGoogleclassroom } from "react-icons/si";
+import { PiDroneFill } from "react-icons/pi";
+import { SiJetpackcompose } from "react-icons/si";
+import { GrAddCircle } from "react-icons/gr";
+import { FaHome } from "react-icons/fa";
+import { IoMdLogOut } from "react-icons/io";
+import { AuthContext } from "../../contexts/AuthContext";
+import { NavLink } from "react-router-dom";
+import config from "../../config";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+  let navigate = useNavigate();
+  const { authState, logout } = useContext(AuthContext);
+
+  const { user } = authState;
+
   return (
-    <Navbar
-      className="justify-content-md-center"
-      style={{ backgroundColor: "#f3969a" }}
-    >
-      <Container style={{ margin: 0 }}>
-        <Nav className="w-100 d-flex align-items-center fw-bold">
-          <Nav.Item className="mr-auto ">
-            <Navbar.Brand href="#home">Logo</Navbar.Brand>
-          </Nav.Item>
-          <Nav.Item className="mr-auto">
-            <Nav.Link href="/Account">Account</Nav.Link>
-          </Nav.Item>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="ml-auto ">
-              <Nav.Link href="/Home">Trang chủ</Nav.Link>
-              <Nav.Link href="#home">Đơn đã gửi</Nav.Link>
-              <Nav.Link href="#features">Đơn gửi đến</Nav.Link>
-              <Nav.Link href="#pricing">Phòng ban</Nav.Link>
-              <Nav.Link href="#about">Thống kê</Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
-        </Nav>
-      </Container>
-    </Navbar>
+    <div className="header-container">
+      <div className="header-left">
+        <div className="list-menu">
+          <NavLink to={config.urls.home} className="menu-item">
+            <FaHome /> <span>Trang chủ</span>
+          </NavLink>
+          {user.permissions.room.some((role) => role === "read") && (
+            <NavLink to={config.urls.room} className="menu-item">
+              <SiGoogleclassroom /> <span>Phòng ban</span>
+            </NavLink>
+          )}
+          {user.permissions.position.some((role) => role === "read") && (
+            <NavLink to={config.urls.position} className="menu-item">
+              <SiJetpackcompose />
+              <span>chức vụ </span>
+            </NavLink>
+          )}
+          {user.permissions.permission.some((role) => role === "read") && (
+            <NavLink to={config.urls.permission} className="menu-item">
+              <PiDroneFill />
+              <spam>Quyền</spam>
+            </NavLink>
+          )}
+          <NavLink to={config.urls.createSingle} className="menu-item">
+            <GrAddCircle />
+            <spam>Tạo đơn</spam>
+          </NavLink>
+        </div>
+      </div>
+      <div className="header-right">
+        <NavLink to={config.urls.account} className="header-user">
+          <FaRegUserCircle />
+          <span>{user.name}</span>
+        </NavLink>
+        <div className="header-action">
+          <IoMdLogOut
+            onClick={() => {
+              logout();
+              navigate(config.urls.login);
+            }}
+          />
+        </div>
+      </div>
+    </div>
   );
 };
 

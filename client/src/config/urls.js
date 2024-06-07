@@ -1,9 +1,13 @@
 const urls = {
-  login: "login",
-  register: "register",
+  login: "/login",
+  register: "/register",
   home: "/",
-  account: "account",
-  modifyInformation: "modifyInformation",
+  room: "/room",
+  account: "/account",
+  position: "/position",
+  permission: "/permission",
+  approveSingle: "/approve-single",
+  createSingle: "/create-single",
 };
 
 export default urls;

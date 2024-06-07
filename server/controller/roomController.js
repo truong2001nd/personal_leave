@@ -1,4 +1,5 @@
 const Room = require("../models/Rooms.js");
+const User = require("../models/Users.js");
 
 const createRoom = async (req, res, next) => {
   if (!req.permissions.room.includes("create")) {
@@ -33,22 +34,29 @@ const createRoom = async (req, res, next) => {
 };
 
 const getOneRoom = async (req, res) => {
-  if (!req.permissions.room.includes("read")) {
-    return res.json({
-      status: 401,
-      message: "Bạn không có quyền xem phòng ban",
-    });
-  }
   try {
     const roomCondition = await Room.findOne({ _id: req.params.id });
     if (!roomCondition) {
       return res.json({ status: 400, message: "Phòng ban đã tồn tại" });
     }
-    const RoomOne = await Room.findOne(roomCondition);
+    const getUserRoom = await User.find({ room: req.params.id })
+      .populate({
+        path: "permissions",
+        select: "name",
+      })
+      .populate({
+        path: "room",
+        select: "name",
+      })
+      .populate({
+        path: "positions",
+        select: "name",
+      });
+
     res.json({
       status: 200,
       message: "Thành công",
-      data: RoomOne,
+      data: getUserRoom,
     });
   } catch (error) {
     res.json({ status: 500, message: "Dịch vụ tạm thời giám đoạn" });

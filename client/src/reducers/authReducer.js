@@ -12,6 +12,11 @@ const authReducer = (state, action) => {
         isAuthenticated,
         user,
       };
+    case "SET_USER":
+      return {
+        ...state,
+        user,
+      };
 
     default:
       return state;

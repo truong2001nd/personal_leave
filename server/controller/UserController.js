@@ -16,7 +16,6 @@ const loadUser = async (req, res) => {
     const user = await User.findById(req.userId)
       .populate({
         path: "permissions",
-        select: "name",
       })
       .populate({
         path: "room",
@@ -175,10 +174,6 @@ const updateUser = async (req, res, next) => {
   }
   const { name, email, password, sex, phone, birthday } = req.body;
   try {
-    // kiểm tra id có trùng khớp khônmg
-    if (!(req.userId === req.params.id)) {
-      return res.json({ status: 400, message: "ID người dùng không hợp lệ" });
-    }
     // kiểm tra xem email sửa đã tôn tại chưa và trừ trùng với tk cần sửa
     const existingUser = await User.findOne({
       email,
@@ -188,8 +183,11 @@ const updateUser = async (req, res, next) => {
       return res.json({ status: 400, message: " Email đã tồn tại" });
     }
 
+    const hashedPassword = await argon2.hash(password);
+
     let updateUser = {
       name,
+      password: hashedPassword,
       email,
       sex: sex || 1,
       phone: phone || "",
@@ -201,6 +199,78 @@ const updateUser = async (req, res, next) => {
       updateUser,
       { new: true }
     );
+    if (!newUser) {
+      return res.json({ status: 400, message: " Không tồn tại tài khoản" });
+    }
+    res.json({
+      status: 200,
+      message: "Cập nhật thành công!",
+      data: newUser,
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ status: 500, message: "Dịch vụ bị gián đoạn" });
+  }
+};
+
+// Chỉnh sửa tài khoản
+const updateAccount = async (req, res, next) => {
+  const { name, email, sex, phone, birthday } = req.body;
+
+  if (!name || !email) {
+    return res.json({ status: 422, message: "Sai dữ liệu đầu vào" });
+  }
+  try {
+    let updateUser = {
+      name,
+      email,
+      sex: sex || 1,
+      phone: phone || "",
+      birthday: birthday || "",
+    };
+
+    const newUser = await User.findOneAndUpdate(
+      { _id: req.userId },
+      updateUser,
+      { new: true }
+    );
+    res.json({
+      status: 200,
+      message: "Cập nhật thành công!",
+      data: newUser,
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ status: 500, message: "Dịch vụ bị gián đoạn" });
+  }
+};
+const changePassword = async (req, res) => {
+  const { password, newPassword } = req.body;
+  if (!password || !newPassword) {
+    return res.json({ status: 422, message: "Sai dữ liệu đầu vào" });
+  }
+  try {
+    const checkUser = await User.findOne({
+      _id: req.userId,
+    });
+    const passwordValid = await argon2.verify(checkUser.password, password);
+
+    if (!passwordValid) {
+      return res.json({
+        status: 401,
+        message: "Mật khẩu hiện tại không chính xác",
+      });
+    }
+
+    const hashedPassword = await argon2.hash(newPassword);
+    const newUser = await User.findOneAndUpdate(
+      { _id: req.userId },
+      { password: hashedPassword },
+      { new: true }
+    );
+    if (!newUser) {
+      return res.json({ status: 400, message: " Không tồn tại tài khoản" });
+    }
     res.json({
       status: 200,
       message: "Cập nhật thành công!",
@@ -215,12 +285,20 @@ const updateUser = async (req, res, next) => {
 // Xem tất cả các tài khoản
 const getAllUsers = async (req, res, next) => {
   try {
-    const userAll = await User.find();
-    const names = userAll.map((user) => ({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-    }));
+    const userAll = await User.find()
+      .populate({
+        path: "permissions",
+        select: "name",
+      })
+      .populate({
+        path: "room",
+        select: "name",
+      })
+      .populate({
+        path: "positions",
+        select: "name",
+      })
+      .select("-password");
 
     if (!userAll) {
       return res.json({
@@ -229,7 +307,7 @@ const getAllUsers = async (req, res, next) => {
       });
     }
 
-    res.json({ status: 200, message: "Thành công", data: names });
+    res.json({ status: 200, message: "Thành công", data: userAll });
   } catch (error) {
     console.log(error);
     res.json({ status: 500, message: "Dịch vụ bị gián đoạn" });
@@ -329,4 +407,6 @@ module.exports = {
   disableAccount,
   loadUser,
   getUser,
+  updateAccount,
+  changePassword,
 };
