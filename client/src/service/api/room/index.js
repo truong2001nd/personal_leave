@@ -1,10 +1,11 @@
 import axios from "axios";
 import { apiUrl } from "../../../contexts/constants";
 
-const apiGetRoom = async (search) => {
+const apiGetRoom = async (data) => {
   return axios({
     method: "get",
-    url: `${apiUrl}/room/getAll${search}`,
+    url: `${apiUrl}/room/getAll`,
+    params: data,
   });
 };
 const apiPostRoom = async (data) => {

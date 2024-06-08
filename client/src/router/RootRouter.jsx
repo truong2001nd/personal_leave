@@ -7,10 +7,9 @@ import config from "../config";
 import Login from "../views/Login/Login";
 import Home from "../views/Home/Home";
 import DefaultLayout from "../layout/DefaultLayout";
-import Account from "../views/account/account.js";
-import Room from "../views/room/room.js";
+import Account from "../views/Account/Account.js";
 
-
+import ListRoom from "../views/Room/List.js";
 
 const RootRouter = () => {
   const {
@@ -27,9 +26,12 @@ const RootRouter = () => {
           <Routes>
             <Route exact path={config.urls.home} element={<Home />} />
             <Route exact path={config.urls.account} element={<Account />} />
-            <Route exact path={config.urls.room} element={<Room />} />
-            <Route exact path="*" element={<Navigate to={config.urls.home} />} />
-            
+            <Route exact path={config.urls.room} element={<ListRoom />} />
+            <Route
+              exact
+              path="*"
+              element={<Navigate to={config.urls.home} />}
+            />
           </Routes>
         </DefaultLayout>
       );
