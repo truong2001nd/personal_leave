@@ -6,18 +6,13 @@ const createPositions = async (req, res) => {
     return res.json({ status: 401, message: "Bạn không có quyền tạo chức vụ" });
   }
   const { name, room } = req.body;
-  if (!name) {
+  if (!name || !room) {
     return res.json({
       success: 422,
       message: "Sai dữ liệu đầu vào",
     });
   }
-  if (!room) {
-    return res.json({
-      status: 400,
-      message: "vui lòng chọn chức vụ",
-    });
-  }
+
   try {
     let roomObject = await Room.findById(room);
     if (!roomObject) {
@@ -64,18 +59,34 @@ const getAllPosition = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1; // Trang hiện tại, mặc định là trang 1
     const limit = parseInt(req.query.limit) || 5; // Số lượng mục trên mỗi trang, mặc định là 5
-    const search = req.query.search || ""; // Từ khóa tìm kiếm, mặc định là chuỗi rỗng
+    const keySearch = req.query.keySearch || ""; // Từ khóa tìm kiếm, mặc định là chuỗi rỗng
+    const room = req.query.room || ""; // Từ khóa tìm kiếm, mặc định là chuỗi rỗng
     const searchConditions = {};
-    if (search) {
+    if (keySearch) {
       // Nếu có từ khóa tìm kiếm, thêm điều kiện tìm kiếm
-      searchConditions.name = { $regex: new RegExp(search, "i") }; // Tìm kiếm tên permission không phân biệt chữ hoa, chữ thường
+      searchConditions.name = { $regex: new RegExp(keySearch, "i") }; // Tìm kiếm tên permission không phân biệt chữ hoa, chữ thường
+    }
+
+    if (room) {
+      searchConditions.room = room;
     }
 
     // Tìm kiếm và phân trang
     const positionAll = await Position.find(searchConditions)
+      .populate({
+        path: "room",
+        select: "name",
+      })
       .skip((page - 1) * limit) // Bỏ qua các mục trước đó
       .limit(limit); // Giới hạn số lượng mục trả về trên mỗi trang
 
+    if (positionAll.length === 0) {
+      return res.json({
+        status: 200,
+        message: "Không tìm thấy chức vụ tương ứng",
+        data: positionAll,
+      });
+    }
     // Đếm số lượng Position để tính tổng số trang
     const totalCount = await Position.countDocuments(searchConditions);
 

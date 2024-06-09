@@ -23,23 +23,23 @@ const Header = () => {
       <div className="header-left">
         <div className="list-menu">
           <NavLink to={config.urls.home} className="menu-item">
-            <FaHome /> <spam>Trang chủ</spam>
+            <FaHome /> <span>Trang chủ</span>
           </NavLink>
           {user.permissions.room.some((role) => role === "read") && (
             <NavLink to={config.urls.room} className="menu-item">
-              <SiGoogleclassroom /> <spam>Phòng ban</spam>
+              <SiGoogleclassroom /> <span>Phòng ban</span>
             </NavLink>
           )}
           {user.permissions.position.some((role) => role === "read") && (
             <NavLink to={config.urls.position} className="menu-item">
               <SiJetpackcompose />
-              <spam>chức vụ </spam>
+              <span>chức vụ </span>
             </NavLink>
           )}
           {user.permissions.permission.some((role) => role === "read") && (
             <NavLink to={config.urls.permission} className="menu-item">
               <PiDroneFill />
-              <spam>Quyền</spam>
+              <span>Quyền</span>
             </NavLink>
           )}
           <NavLink to={config.urls.createSingle} className="menu-item">
@@ -51,7 +51,7 @@ const Header = () => {
       <div className="header-right">
         <NavLink to={config.urls.account} className="header-user">
           <FaRegUserCircle />
-          <spam>{user.name}</spam>
+          <span>{user.name}</span>
         </NavLink>
         <div className="header-action">
           <IoMdLogOut

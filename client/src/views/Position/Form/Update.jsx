@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-// import { Button } from "@mui/material";
 import FromCustom from "./From";
 import { toast } from "react-toastify";
-import { apiUpdateRoom } from "../../../service/api/room";
 import { MdEdit } from "react-icons/md";
+import { apiUpdatePosition } from "../../../service/api/position";
 
 function Update({ handleGetList, dataRow }) {
   const [open, setOpen] = useState(false);
@@ -12,7 +11,7 @@ function Update({ handleGetList, dataRow }) {
 
   const handleSubmit = async (data) => {
     try {
-      const response = await apiUpdateRoom(data._id, data);
+      const response = await apiUpdatePosition(data._id, data);
       if (response.data.status === 200) {
         toast.success(response.data.message);
         handleGetList();
