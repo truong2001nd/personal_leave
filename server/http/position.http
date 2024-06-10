@@ -4,8 +4,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjNmY
 
 
 {
-    "name": "Giám đốc",
-    "room": "666537fd39b9c6bca82afa1e"
+    "name": "Nhân viên",
+    "room": "666402583cf9af24114e1e0a",
+    "status": 1
     
 }
 

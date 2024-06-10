@@ -10,6 +10,7 @@ import DefaultLayout from "../layout/DefaultLayout";
 import Account from "../views/Account/Account.js";
 import ListRoom from "../views/Room/List.js";
 import ListPosition from "../views/Position/List.js";
+import ListPermissions from "../views/Permissions/List.js";
 
 const RootRouter = () => {
   const {
@@ -31,6 +32,11 @@ const RootRouter = () => {
               exact
               path={config.urls.position}
               element={<ListPosition />}
+            />
+            <Route
+              exact
+              path={config.urls.permission}
+              element={<ListPermissions />}
             />
             <Route
               exact

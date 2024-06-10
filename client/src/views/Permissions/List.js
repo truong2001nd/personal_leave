@@ -24,8 +24,7 @@ import Create from "./Form/Create";
 import { dateFormatter } from "../../utils/dateFormatter";
 // import { FaTrash } from "react-icons/fa";
 import Update from "./Form/Update";
-import { apiGetPosition } from "../../service/api/position";
-import { apiGetRoom } from "../../service/api/room";
+import { apiGetPermission } from "../../service/api/listPermissions";
 
 const customSelect = {
   control: (base) => ({
@@ -42,16 +41,13 @@ const listResultValues = [
   { value: "50", label: "50" },
 ];
 
-function ListPosition(props) {
+function ListPermissions(props) {
   // configure data
   const [request, setRequest] = useState({
     keySearch: "",
     page: 1,
     size: 10,
-    room: "",
   });
-
-  const [listRoom, setListRoom] = useState([]);
 
   // configure data
 
@@ -101,31 +97,14 @@ function ListPosition(props) {
 
   // call api
 
-  // Danh sách chức vụ
+  // Danh sách room
   const handleGetList = async () => {
     try {
-      const result = await apiGetPosition(request);
+      const result = await apiGetPermission(request);
+
       if (result.data.status === 200) {
         setRowsData(result.data.data);
         setTotalRecord(result.data.totalCount);
-      } else {
-        toast.error(result.message);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.warning("Hệ thống đang bảo trì!");
-    }
-  };
-
-  const handleGetListRoom = async () => {
-    try {
-      const result = await apiGetRoom({
-        kkeySearch: "",
-        page: 1,
-        size: 100,
-      });
-      if (result.data.status === 200) {
-        setListRoom(result.data.data);
       } else {
         toast.error(result.message);
       }
@@ -152,17 +131,13 @@ function ListPosition(props) {
     handleGetList();
   }, [request]);
 
-  useEffect(() => {
-    handleGetListRoom();
-  }, []);
-
   return (
     <div className="wrapper-screen-list">
       <div className="top-content">
         <div className="row">
           <div className="col-md-2">
             <div className="text-left">
-              <h3 className="heading-page text-uppercase">Chức vụ</h3>
+              <h3 className="heading-page text-uppercase">Quyền</h3>
             </div>
           </div>
           <div className="col-md-4 px-0">
@@ -170,7 +145,7 @@ function ListPosition(props) {
               <div>
                 <input
                   type="text"
-                  placeholder="Tên chức vụ"
+                  placeholder="Tên quyền"
                   className="inputSearch"
                   onChange={(e) => handleOnChangeSearch(e.target.value)}
                 />
@@ -202,43 +177,25 @@ function ListPosition(props) {
 
       {/* Body */}
       <div className="body-content row">
-        <div className="col-md-2">
+        {/* <div className="col-md-2">
           <div className="filter-options">
             <label className="font-weight-bold">Thông tin chung</label>
-
-            <select
-              className="form-select"
-              value={request.room}
-              name="room"
-              onChange={(e) => {
-                setRequest((prev) => {
-                  return {
-                    ...prev,
-                    room: e.target.value,
-                    page: 1,
-                  };
-                });
-              }}
-            >
-              <option value="">Chọn phòng ban</option>
-              {listRoom.map((department, index) => (
-                <option key={index} value={department._id}>
-                  {department.name}
-                </option>
-              ))}
-            </select>
           </div>
-        </div>
-        <div className="col-md-10 custom-col-child-padding pl-0">
+        </div> */}
+        <div className="col-md-12 custom-col-child-padding pl-0">
           <CardContent className="card-content mb-5" sx={{ boxShadow: 0 }}>
             <TableContainer className="table-container">
               <Table>
                 <TableHead>
                   <TableRow className="custom-table-head">
-                    <TableCell className="text-center">Tên Chức vụ</TableCell>
+                    <TableCell className="text-center">Tên Quền</TableCell>
+                    <TableCell className="text-center">Tài khoản</TableCell>
+                    <TableCell className="text-center">Quyền</TableCell>
+                    <TableCell className="text-center">Chức vụ</TableCell>
                     <TableCell className="text-center">Phòng ban</TableCell>
-                    <TableCell className="text-center">Thời gian tạo</TableCell>
-                    <TableCell className="text-center">Ngày update</TableCell>
+                    <TableCell className="text-center">Đơn</TableCell>
+                    <TableCell className="text-center">Loại Đơn</TableCell>
+                    <TableCell className="text-center">Trạng thái</TableCell>
                     <TableCell
                       className="text-center"
                       style={{ maxWidth: "100px" }}
@@ -258,14 +215,31 @@ function ListPosition(props) {
                           </TableCell>
 
                           <TableCell className="text-center">
-                            {row?.room.name}
+                            {row?.user.join(", ")}
                           </TableCell>
 
                           <TableCell className="text-center">
-                            {dateFormatter(row?.createdAt)}
+                            {row?.permission.join(", ")}
                           </TableCell>
+
                           <TableCell className="text-center">
-                            {dateFormatter(row?.updatedAt)}
+                            {row?.position.join(", ")}
+                          </TableCell>
+
+                          <TableCell className="text-center">
+                            {row?.room.join(", ")}
+                          </TableCell>
+
+                          <TableCell className="text-center">
+                            {row?.single.join(", ")}
+                          </TableCell>
+
+                          <TableCell className="text-center">
+                            {row?.singleType.join(", ")}
+                          </TableCell>
+
+                          <TableCell className="text-center">
+                            {row?.status}
                           </TableCell>
                           <TableCell className="text-center">
                             <Update
@@ -370,4 +344,4 @@ function ListPosition(props) {
   );
 }
 
-export default ListPosition;
+export default ListPermissions;

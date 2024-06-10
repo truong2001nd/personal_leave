@@ -44,7 +44,7 @@ const Header = () => {
           )}
           <NavLink to={config.urls.createSingle} className="menu-item">
             <GrAddCircle />
-            <spam>Tạo đơn</spam>
+            <span>Tạo đơn</span>
           </NavLink>
         </div>
       </div>

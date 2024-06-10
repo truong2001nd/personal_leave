@@ -5,7 +5,8 @@ const createPositions = async (req, res) => {
   if (!req.permissions.position.includes("create")) {
     return res.json({ status: 401, message: "Bạn không có quyền tạo chức vụ" });
   }
-  const { name, room } = req.body;
+  const { name, room, status } = req.body;
+
   if (!name || !room) {
     return res.json({
       success: 422,
@@ -26,6 +27,7 @@ const createPositions = async (req, res) => {
       name,
       room: roomObject._id,
     }).lean();
+
     if (existingPosition) {
       return res.json({
         status: 400,
@@ -33,11 +35,10 @@ const createPositions = async (req, res) => {
       });
     }
 
-    console.log("existingPosition", existingPosition);
-
     const newPosition = new Position({
       name,
       room: room,
+      status: status || 0,
     });
 
     await newPosition.save();

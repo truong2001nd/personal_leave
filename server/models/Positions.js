@@ -13,6 +13,7 @@ const Positions = new Schema(
       ref: "Rooms",
       required: true,
     },
+    status: { type: Number, enum: [0, 1] },
   },
   { timestamps: true }
 );
