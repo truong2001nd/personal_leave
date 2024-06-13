@@ -4,7 +4,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTFjZ
 
 
 {
-    "name": "Đơn xin nghỉ phép",
+    "name": "Đơn xin nghỉ việc ",
     "content":[
         {
             "key":"proposedName",
@@ -22,28 +22,23 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTFjZ
             "required": true
         },
         {
-            "key":"room",
-            "label":"bộ phận",
-            "required": true
-        },
-        {
-            "key":"startDay",
-            "label":"Ngày bắt đầu làm việc",
-            "required": true
-        },
-        {
             "key":"position",
             "label":"chức vụ",
             "required": true
         },
         {
-            "key":"TheLastWorkingDay",
-            "label":"Ngày làm việc cuối cùng",
+            "key":"room",
+            "label":"bộ phận",
             "required": true
         },
         {
-            "key":"reasonForQuittingJob",
-            "label":"Lí do nghỉ việc",
+            "key":"requestDate",
+            "label":"Ngày xin",
+            "required": true
+        },
+        {
+            "key":"reason",
+            "label":"Lí do ",
             "required": true
         },
         {
@@ -64,36 +59,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTFjZ
 
 
 ###
-PUT  http://localhost:5000/api/singleType/update/652014d9a520f45d51f638d8
+PUT  http://localhost:5000/api/singleType/update/6666bb7762b462ba8777f079
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTFjZmUzZjk4NTA1MTNjODBiOTNkZmEiLCJwZXJtaXNzaW9ucyI6eyJfaWQiOiI2NTFjZDc0NTEzMDU2YjRmOTRhY2Y4NzkiLCJuYW1lIjoiYWRtaW4iLCJzdGF0dXMiOjEsInBlcm1pc3Npb24iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJwb3NpdGlvbiI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInJvb20iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJzaW5nbGUiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSIsImFwcHJvdmUiXSwic2luZ2xlVHlwZSI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInVzZXIiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJjcmVhdGVkQXQiOiIyMDIzLTEwLTA0VDAzOjA4OjUzLjMzOVoiLCJ1cGRhdGVkQXQiOiIyMDIzLTEwLTA0VDAzOjA4OjUzLjMzOVoiLCJfX3YiOjB9LCJpYXQiOjE2OTY2MDA2MDR9.1v3Y_tA83glkwGzLchPamHl31yCHOdKGT2bVaDxKEcI
 
 {
-    "name": "Đơn xin nghỉ phép",
+    "name": "Đơn xin việc riêng ",
     "content":[
-        {
-            "key":"proposedName",
-            "label":"Tên đề xuất",
-            "required": true
-        },
-        {
-            "key":"proposalGroup",
-            "label":"Nhóm đề xuất",
-            "required": true
-        },
         {
             "key":"fullName",
             "label":"Họ Và tên",
-            "required": true
-        },
-        {
-            "key":"room",
-            "label":"bộ phận",
-            "required": true
-        },
-        {
-            "key":"startDay",
-            "label":"Ngày bắt đầu làm việc",
             "required": true
         },
         {
@@ -102,13 +77,18 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTFjZ
             "required": true
         },
         {
-            "key":"TheLastWorkingDay",
-            "label":"Ngày làm việc cuối cùng",
+            "key":"room",
+            "label":"bộ phận",
             "required": true
         },
         {
-            "key":"reasonForQuittingJob",
-            "label":"Lí do nghỉ việc",
+            "key":"requestDate",
+            "label":"Ngày xin",
+            "required": true
+        },
+        {
+            "key":"reason",
+            "label":"Lí do ",
             "required": true
         },
         {
@@ -117,7 +97,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTFjZ
             "required": true
         }
 
-    ]
+    ],
+    "status":0
 }
 
 ###

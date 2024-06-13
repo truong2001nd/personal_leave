@@ -77,12 +77,16 @@ const getAllSingleType = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1; // Trang hiện tại, mặc định là trang 1
     const limit = parseInt(req.query.limit) || 10; // Số lượng mục trên mỗi trang, mặc định là 10
-    const search = req.query.search || ""; // Từ khóa tìm kiếm, mặc định là chuỗi rỗng
-    // Xây dựng các điều kiện tìm kiếm
+    const keySearch = req.query.keySearch || ""; // Từ khóa tìm kiếm, mặc định là chuỗi rỗng
+    const _id = req.query._id || ""; // Từ khóa tìm kiếm, mặc định là chuỗi rỗng
     const searchConditions = {};
-    if (search) {
+    if (keySearch) {
       // Nếu có từ khóa tìm kiếm, thêm điều kiện tìm kiếm
-      searchConditions.name = { $regex: new RegExp(search, "i") }; // Tìm kiếm tên permission không phân biệt chữ hoa, chữ thường
+      searchConditions.name = { $regex: new RegExp(keySearch, "i") }; // Tìm kiếm tên permission không phân biệt chữ hoa, chữ thường
+    }
+    if (_id) {
+      // Nếu có từ khóa tìm kiếm, thêm điều kiện tìm kiếm
+      searchConditions._id = _id; // Tìm kiếm tên permission không phân biệt chữ hoa, chữ thường
     }
 
     // Tìm kiếm và phân trang
@@ -126,16 +130,11 @@ const updateSingleType = async (req, res) => {
   }
   try {
     const singleTypeId = await SingleType.findOne({ _id: req.params.id });
+    console.log(singleTypeId);
     if (!singleTypeId) {
       return res.json({ status: 400, message: "Id loại Đơn không hợp lệ" });
     }
-    const existingSingleType = await SingleType.findOne({
-      name,
-      _id: { $ne: req.params.id },
-    });
-    if (existingSingleType) {
-      return res.json({ status: 400, message: "Tên loại đơn đã tồn tại" });
-    }
+
     let updateSingleType = {
       name,
       content: JSON.stringify(content),
@@ -147,7 +146,7 @@ const updateSingleType = async (req, res) => {
       updateSingleType,
       { new: true }
     );
-    re.json({
+    res.json({
       status: 200,
       message: "Cập nhật thành công!",
       data: newSingleTypeId,

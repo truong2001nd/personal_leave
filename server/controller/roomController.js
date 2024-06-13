@@ -33,16 +33,17 @@ const createRoom = async (req, res, next) => {
   }
 };
 
-const getOneRoom = async (req, res) => {
+const getRoomUserApprove = async (req, res) => {
   try {
     const roomCondition = await Room.findOne({ _id: req.params.id });
     if (!roomCondition) {
-      return res.json({ status: 400, message: "Phòng ban đã tồn tại" });
+      return res.json({ status: 400, message: "Phòng ban không đã tồn tại" });
     }
-    const getUserRoom = await User.find({ room: req.params.id })
+    const getUserRoom = await User.find({
+      room: req.params.id,
+    })
       .populate({
         path: "permissions",
-        select: "name",
       })
       .populate({
         path: "room",
@@ -52,11 +53,13 @@ const getOneRoom = async (req, res) => {
         path: "positions",
         select: "name",
       });
-
+    const getUserApprove = getUserRoom.filter((data) =>
+      data.permissions.singleType.includes("update")
+    );
     res.json({
       status: 200,
       message: "Thành công",
-      data: getUserRoom,
+      data: getUserApprove,
     });
   } catch (error) {
     res.json({ status: 500, message: "Dịch vụ tạm thời giám đoạn" });
@@ -165,4 +168,10 @@ const deleteRoom = async (req, res) => {
     res.json({ status: 500, message: "Dịch vụ tạm thời giám đoạn" });
   }
 };
-module.exports = { createRoom, getOneRoom, getAllRoom, updateRoom, deleteRoom };
+module.exports = {
+  createRoom,
+  getRoomUserApprove,
+  getAllRoom,
+  updateRoom,
+  deleteRoom,
+};

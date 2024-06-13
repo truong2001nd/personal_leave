@@ -120,7 +120,7 @@ function ListPosition(props) {
   const handleGetListRoom = async () => {
     try {
       const result = await apiGetRoom({
-        kkeySearch: "",
+        keySearch: "",
         page: 1,
         size: 100,
       });

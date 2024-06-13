@@ -3,7 +3,7 @@ const verifyToken = require("../middleware/verifyToken");
 
 const {
   createRoom,
-  getOneRoom,
+  getRoomUserApprove,
   getAllRoom,
   updateRoom,
   deleteRoom,
@@ -12,7 +12,7 @@ const {
 const router = express.Router();
 
 router.post("/create", verifyToken, createRoom);
-router.get("/getOne/:id", verifyToken, getOneRoom);
+router.get("/getRoomUserApprove/:id", verifyToken, getRoomUserApprove);
 router.get("/getAll", verifyToken, getAllRoom);
 router.put("/update/:id", verifyToken, updateRoom);
 router.delete("/deleteRoom/:id", verifyToken, deleteRoom);

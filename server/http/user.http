@@ -17,7 +17,7 @@ POST http://localhost:5000/api/users/login
 Content-Type: application/json
 
 {
-    "email":"admin@gmail.com",
+    "email":"truongkit102@gmail.com",
     "password":"123"
 }
 ###
@@ -73,6 +73,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjYwM
 {
    
   
-    "password":"mot",
+    "password":"A74583",
     "newPassword":"1"
 }

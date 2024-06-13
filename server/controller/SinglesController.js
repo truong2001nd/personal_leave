@@ -52,8 +52,28 @@ const createSingle = async (req, res, next) => {
     await sendMail({
       email: approverRelease.email,
       subject: `"Thông báo có đơn mới từ ${req.userName} "`,
-      html: `<h1>${name} <h1>  
-      `,
+      html: `<table cellpadding="0" cellspacing="0" style="border-collapse: collapse; border: none;">
+                <tr>
+                  <td style="border: 1px solid #ddd; padding: 8px;">
+                    <h2 style="margin: 0;">Thông tin đơn</h2>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="border: 1px solid #ddd; padding: 8px;">
+                    <p><strong>Người nộp đơn:</strong> ${req.userName} </p>
+                    <p><strong>Ngày nộp:</strong> [Ngày nộp đơn]</p>
+                    <p><strong>Nội dung đơn:</strong></p>
+                    <p>[Nội dung đơn]</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="border: 1px solid #ddd; padding: 8px;">
+                    <p>Vui lòng xem xét đơn và phản hồi sớm.</p>
+                    <p>Trân trọng,</p>
+                    <p>[Tên của bạn]</p>
+                  </td>
+                </tr>
+              </table>`,
     });
   } catch (error) {
     console.log(error);
@@ -76,14 +96,32 @@ const getAllSingle = async (req, res) => {
     const page = parseInt(req.query.page) || 1; // Trang hiện tại, mặc định là trang 1
     const limit = parseInt(req.query.limit) || 6; // Số lượng mục trên mỗi trang, mặc định là 5
     const search = req.query.search || ""; // Từ khóa tìm kiếm, mặc định là chuỗi rỗng
+    const singlesStyes = req.query.singlesStyes || ""; // Từ khóa tìm kiếm, mặc định là chuỗi rỗng
     const searchConditions = {};
     if (search) {
       // Nếu có từ khóa tìm kiếm, thêm điều kiện tìm kiếm
-      searchConditions.name = { $regex: new RegExp(search, "i") }; // Tìm kiếm tên permission không phân biệt chữ hoa, chữ thường
+      searchConditions.singlesStyes = { $regex: new RegExp(search, "i") }; // Tìm kiếm tên permission không phân biệt chữ hoa, chữ thường
+    }
+    if (singlesStyes) {
+      searchConditions.singlesStyes = singlesStyes;
     }
 
     // Tìm kiếm và phân trang
-    const singleAll = await Singles.find(searchConditions)
+    const singleAll = await Singles.find({
+      sender: req.userId,
+      ...searchConditions,
+    })
+      .populate({
+        path: "sender",
+        select: "name _id",
+      })
+      .populate({
+        path: "approver",
+        select: "name _id",
+      })
+      .select(
+        "_id name content status singlesStyes sender approver createdAt updatedAt __v"
+      )
       .skip((page - 1) * limit) // Bỏ qua các mục trước đó
       .limit(limit); // Giới hạn số lượng mục trả về trên mỗi trang
 

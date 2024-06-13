@@ -1,23 +1,26 @@
 import axios from "axios";
 import { apiUrl } from "../../../contexts/constants";
 
-const apiGetRoom = async (data) => {
+// get loại đơn
+const apiGetSingleType = async (data) => {
   return axios({
     method: "get",
-    url: `${apiUrl}/room/getAll`,
+    url: `${apiUrl}/singleType/getAll`,
     params: data,
   });
 };
-const apiGetRoomUserApprove = async (id) => {
+// get đơn
+const apiGetSingle = async (data) => {
   return axios({
     method: "get",
-    url: `${apiUrl}/room/getRoomUserApprove/${id}`,
+    url: `${apiUrl}/single/getAll`,
+    params: data,
   });
 };
-const apiPostRoom = async (data) => {
+const apiPostSingleType = async (data) => {
   return axios({
     method: "post",
-    url: `${apiUrl}/room/create`,
+    url: `${apiUrl}/single/create`,
     data: data,
   });
 };
@@ -36,9 +39,9 @@ const apiUpdateRoom = async (id, data) => {
 };
 
 export {
-  apiGetRoom,
-  apiPostRoom,
+  apiGetSingleType,
+  apiGetSingle,
+  apiPostSingleType,
   apiDeleteRoom,
   apiUpdateRoom,
-  apiGetRoomUserApprove,
 };
