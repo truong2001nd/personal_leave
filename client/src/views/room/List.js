@@ -22,7 +22,7 @@ import Select from "react-select";
 import { toast } from "react-toastify";
 import { apiGetRoom } from "../../service/api/room";
 import Create from "./Form/Create";
-import { dateFormatter } from "../../utils/dateFormatter";
+import { date, dateFormatter } from "../../utils/dateFormatter";
 // import { FaTrash } from "react-icons/fa";
 import Update from "./Form/Update";
 
@@ -214,10 +214,10 @@ function ListRoom(props) {
                           </TableCell>
 
                           <TableCell className="text-center">
-                            {dateFormatter(row?.createdAt)}
+                            {date(row?.createdAt)}
                           </TableCell>
                           <TableCell className="text-center">
-                            {dateFormatter(row?.updatedAt)}
+                            {date(row?.updatedAt)}
                           </TableCell>
                           <TableCell className="text-center">
                             <Update

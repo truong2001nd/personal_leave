@@ -30,10 +30,10 @@ const apiDeleteRoom = async (id) => {
     url: `${apiUrl}/room/deleteRoom/${id}`,
   });
 };
-const apiUpdateRoom = async (id, data) => {
+const apiUpdateApproval = async (id, data) => {
   return axios({
     method: "put",
-    url: `${apiUrl}/room/update/${id}`,
+    url: `${apiUrl}/single/approval/${id}`,
     data: data,
   });
 };
@@ -43,5 +43,5 @@ export {
   apiGetSingle,
   apiPostSingleType,
   apiDeleteRoom,
-  apiUpdateRoom,
+  apiUpdateApproval,
 };

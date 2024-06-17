@@ -104,7 +104,7 @@ const getAllPermission = async (req, res) => {
 
   try {
     const page = parseInt(req.query.page) || 1; // Trang hiện tại, mặc định là trang 1
-    const limit = parseInt(req.query.limit) || 10; // Số lượng mục trên mỗi trang, mặc định là 10
+    const size = parseInt(req.query.size) || 10; // Số lượng mục trên mỗi trang, mặc định là 10
     const search = req.query.search || ""; // Từ khóa tìm kiếm, mặc định là chuỗi rỗng
     // Xây dựng các điều kiện tìm kiếm
     const searchConditions = {};
@@ -115,8 +115,8 @@ const getAllPermission = async (req, res) => {
 
     // Tìm kiếm và phân trang
     const permissionsAll = await Permissions.find(searchConditions)
-      .skip((page - 1) * limit) // Bỏ qua các mục trước đó
-      .limit(limit); // Giới hạn số lượng mục trả về trên mỗi trang
+      .skip((page - 1) * size) // Bỏ qua các mục trước đó
+      .limit(size); // Giới hạn số lượng mục trả về trên mỗi trang
 
     // Đếm số lượng permissions để tính tổng số trang
     const totalCount = await Permissions.countDocuments(searchConditions);

@@ -20,7 +20,6 @@ const apiUpdatePosition = async (id, data) => {
   return axios({
     method: "put",
     url: `${apiUrl}/Position/update/${id}`,
-
     data: data,
   });
 };

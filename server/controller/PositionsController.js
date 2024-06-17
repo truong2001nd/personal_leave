@@ -59,7 +59,7 @@ const getAllPosition = async (req, res) => {
 
   try {
     const page = parseInt(req.query.page) || 1; // Trang hiện tại, mặc định là trang 1
-    const limit = parseInt(req.query.limit) || 5; // Số lượng mục trên mỗi trang, mặc định là 5
+    const size = parseInt(req.query.size) || 5; // Số lượng mục trên mỗi trang, mặc định là 5
     const keySearch = req.query.keySearch || ""; // Từ khóa tìm kiếm, mặc định là chuỗi rỗng
     const room = req.query.room || ""; // Từ khóa tìm kiếm, mặc định là chuỗi rỗng
     const searchConditions = {};
@@ -78,8 +78,8 @@ const getAllPosition = async (req, res) => {
         path: "room",
         select: "name",
       })
-      .skip((page - 1) * limit) // Bỏ qua các mục trước đó
-      .limit(limit); // Giới hạn số lượng mục trả về trên mỗi trang
+      .skip((page - 1) * size) // Bỏ qua các mục trước đó
+      .limit(size); // Giới hạn số lượng mục trả về trên mỗi trang
 
     if (positionAll.length === 0) {
       return res.json({
@@ -121,7 +121,7 @@ const updatePosition = async (req, res) => {
   if (!req.permissions.position.includes("update")) {
     return res.json({ status: 401, message: "Bạn không có quyền sửa chức vụ" });
   }
-  const { name, room } = req.body;
+  const { name, room, status } = req.body;
   if (!name) {
     return res.json({ status: 422, message: "Sai dữ liệu đầu vào" });
   }
@@ -131,7 +131,7 @@ const updatePosition = async (req, res) => {
     if (!roomObject) {
       return res.json({ status: 400, message: "ID Phòng ban không hợp lệ" });
     }
-    let updatePosition = { name, room: roomObject._id };
+    let updatePosition = { name, room: roomObject._id, status };
 
     const positionId = await Position.findOneAndUpdate(
       { _id: req.params.id },

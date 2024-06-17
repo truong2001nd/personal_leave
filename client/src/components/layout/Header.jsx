@@ -7,6 +7,7 @@ import { SiJetpackcompose } from "react-icons/si";
 import { GrAddCircle } from "react-icons/gr";
 import { FaHome } from "react-icons/fa";
 import { IoMdLogOut } from "react-icons/io";
+import { GoPasskeyFill } from "react-icons/go";
 import { AuthContext } from "../../contexts/AuthContext";
 import { NavLink } from "react-router-dom";
 import config from "../../config";
@@ -25,18 +26,18 @@ const Header = () => {
           <NavLink to={config.urls.home} className="menu-item">
             <FaHome /> <span>Trang chủ</span>
           </NavLink>
-          {user.permissions.room.some((role) => role === "read") && (
+          {user?.permissions?.room?.some((role) => role === "read") && (
             <NavLink to={config.urls.room} className="menu-item">
               <SiGoogleclassroom /> <span>Phòng ban</span>
             </NavLink>
           )}
-          {user.permissions.position.some((role) => role === "read") && (
+          {user?.permissions?.position?.some((role) => role === "read") && (
             <NavLink to={config.urls.position} className="menu-item">
               <SiJetpackcompose />
               <span>chức vụ </span>
             </NavLink>
           )}
-          {user.permissions.permission.some((role) => role === "read") && (
+          {user?.permissions?.permission?.some((role) => role === "read") && (
             <NavLink to={config.urls.permission} className="menu-item">
               <PiDroneFill />
               <span>Quyền</span>
@@ -46,6 +47,12 @@ const Header = () => {
             <GrAddCircle />
             <span>Tạo đơn</span>
           </NavLink>
+          {user?.permissions?.user?.some((role) => role === "read") && (
+            <NavLink to={config.urls.accountManagement} className="menu-item">
+              <GoPasskeyFill />
+              <span>Quản lý tài khoản</span>
+            </NavLink>
+          )}
         </div>
       </div>
       <div className="header-right">
@@ -54,6 +61,7 @@ const Header = () => {
           <span>{user.name}</span>
         </NavLink>
         <div className="header-action">
+          <span>Đăng xuất</span>
           <IoMdLogOut
             onClick={() => {
               logout();

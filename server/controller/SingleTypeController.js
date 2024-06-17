@@ -76,7 +76,7 @@ const getAllSingleType = async (req, res) => {
 
   try {
     const page = parseInt(req.query.page) || 1; // Trang hiện tại, mặc định là trang 1
-    const limit = parseInt(req.query.limit) || 10; // Số lượng mục trên mỗi trang, mặc định là 10
+    const size = parseInt(req.query.size) || 10; // Số lượng mục trên mỗi trang, mặc định là 10
     const keySearch = req.query.keySearch || ""; // Từ khóa tìm kiếm, mặc định là chuỗi rỗng
     const _id = req.query._id || ""; // Từ khóa tìm kiếm, mặc định là chuỗi rỗng
     const searchConditions = {};
@@ -91,8 +91,8 @@ const getAllSingleType = async (req, res) => {
 
     // Tìm kiếm và phân trang
     const singleTypeAll = await SingleType.find(searchConditions)
-      .skip((page - 1) * limit) // Bỏ qua các mục trước đó
-      .limit(limit); // Giới hạn số lượng mục trả về trên mỗi trang
+      .skip((page - 1) * size) // Bỏ qua các mục trước đó
+      .limit(size); // Giới hạn số lượng mục trả về trên mỗi trang
 
     // Đếm số lượng SingleType để tính tổng số trang
     const totalCount = await SingleType.countDocuments(searchConditions);

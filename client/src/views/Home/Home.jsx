@@ -11,20 +11,29 @@ import {
   TableRow,
 } from "@mui/material";
 import { Table } from "react-bootstrap";
-import Update from "../Position/Form/Update";
+import Update from "../Home/Form/Update";
 import { dateFormatter } from "../../utils/dateFormatter";
 
 const Home = () => {
   const { authState } = useContext(AuthContext);
+  const { user } = authState;
+
   const [dataFrom, setDataFrom] = useState([]);
   const [dataSingle, setSingle] = useState({});
-
   const [request, setRequest] = useState({
     keySearch: "",
     page: 1,
     size: 10,
     singlesStyes: "",
   });
+  const [expandedRow, setExpandedRow] = useState(null);
+  const handleToggleRow = (rowId) => {
+    if (expandedRow === rowId) {
+      setExpandedRow(null);
+    } else {
+      setExpandedRow(rowId);
+    }
+  };
   // Danh sách loai don
   const handleGetList = async () => {
     try {
@@ -44,10 +53,9 @@ const Home = () => {
     }
   };
   // danh sách đơn đã gửi
-  const handleGetlistSingle = async () => {
+  const handleGetlistSingle = async (url) => {
     try {
-      console.log("result", request);
-      const result = await apiGetSingle(request);
+      const result = await apiGetSingle(url);
       setSingle(result.data.data);
     } catch (error) {
       console.log(error);
@@ -59,16 +67,17 @@ const Home = () => {
     handleGetList();
   }, [request]);
   useEffect(() => {
-    handleGetlistSingle();
+    handleGetlistSingle(request);
   }, [request]);
-  console.log(request);
   return (
     <div className="body-content row">
       <div className="top-content">
         <div className="row">
           <div className="col-md-2">
             <div className="text-left">
-              <h3 className="heading-page text-uppercase">Đơn đã gửi</h3>
+              <h3 className="heading-page text-uppercase">
+                {user.positions.status === 0 ? "Đơn đã gửi" : "Đơn gửi đến"}
+              </h3>
             </div>
           </div>
         </div>
@@ -107,11 +116,15 @@ const Home = () => {
                 <TableHead>
                   <TableRow className="custom-table-head">
                     <TableCell className="text-center">
-                      Người Nhận đơn
+                      {user.positions.status
+                        ? "Người gửi đơn"
+                        : "Người nhận đơn"}
                     </TableCell>
                     <TableCell className="text-center">Nội dung đơn </TableCell>
-                    <TableCell className="text-center">Ngày gửi đơn</TableCell>
-                    <TableCell className="text-center"></TableCell>
+                    <TableCell className="text-center">Ngày gửi đơn </TableCell>
+                    <TableCell className="text-center">
+                      Trạng thái đơn
+                    </TableCell>
                     <TableCell
                       className="text-center"
                       style={{ maxWidth: "100px" }}
@@ -123,14 +136,18 @@ const Home = () => {
                     dataSingle.map((row, index) => (
                       <React.Fragment key={index}>
                         <TableRow
-                          // onClick={() => handleToggleRow(row.id)}
+                          onClick={() => handleToggleRow(row.id)}
                           style={{ background: "white" }}
                         >
                           <TableCell className="text-center">
-                            {row?.approver.name}
+                            {}
+                            {user.positions.status === 1
+                              ? row?.sender.name
+                              : row?.approver.name}
                           </TableCell>
 
                           <TableCell className="text-center">
+                            {row?.name} - lí do:
                             {row?.content &&
                               JSON.parse(row?.content).find(
                                 (content) => content.key === "reason"
@@ -139,6 +156,21 @@ const Home = () => {
 
                           <TableCell className="text-center">
                             {dateFormatter(row?.createdAt)}
+                          </TableCell>
+                          <TableCell className="text-center">
+                            {row.status === 0 ? (
+                              <span className="badge badge-warning">
+                                Đang chờ duyệt
+                              </span>
+                            ) : row.status === 1 ? (
+                              <span className="badge badge-success">
+                                Đơn đã chấp thuận
+                              </span>
+                            ) : (
+                              <span className="badge badge-danger">
+                                Đơn không được chấp thuận
+                              </span>
+                            )}
                           </TableCell>
 
                           <TableCell className="text-center">

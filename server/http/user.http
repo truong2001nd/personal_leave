@@ -1,14 +1,13 @@
 POST http://localhost:5000/api/users/register
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjNmYjkyYTRlZTAxYjRiYzcyNDBkYWEiLCJ1c2VyTmFtZSI6ImFkbWluIiwicGVybWlzc2lvbnMiOnsiX2lkIjoiNjY1ZWNmZDkzMDM3ZGZkNzdkYmM2NmYyIiwibmFtZSI6IkFkbWluIiwic3RhdHVzIjoxLCJwZXJtaXNzaW9uIjpbImNyZWF0ZSIsInJlYWQiLCJ1cGRhdGUiLCJkZWxldGUiXSwicG9zaXRpb24iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJyb29tIjpbImNyZWF0ZSIsInJlYWQiLCJ1cGRhdGUiLCJkZWxldGUiXSwic2luZ2xlIjpbImNyZWF0ZSIsInJlYWQiLCJ1cGRhdGUiLCJkZWxldGUiXSwic2luZ2xlVHlwZSI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInVzZXIiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJjcmVhdGVkQXQiOiIyMDI0LTA2LTA0VDA4OjI3OjA1Ljk3N1oiLCJ1cGRhdGVkQXQiOiIyMDI0LTA2LTA0VDA4OjI3OjA1Ljk3N1oiLCJfX3YiOjB9LCJpYXQiOjE3MTc1NzAzMzl9.cX1blS_CS-LQ1V96Sv3yE65e_a_cTNZRszaYEDUsJ7U
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjNmYjkyYTRlZTAxYjRiYzcyNDBkYWEiLCJ1c2VyTmFtZSI6ImFkbWluIiwicGVybWlzc2lvbnMiOnsiX2lkIjoiNjY1ZWNmZDkzMDM3ZGZkNzdkYmM2NmYyIiwibmFtZSI6IkFkbWluIiwic3RhdHVzIjoxLCJwZXJtaXNzaW9uIjpbImNyZWF0ZSIsInJlYWQiLCJ1cGRhdGUiLCJkZWxldGUiXSwicG9zaXRpb24iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJyb29tIjpbImNyZWF0ZSIsInJlYWQiLCJ1cGRhdGUiLCJkZWxldGUiXSwic2luZ2xlIjpbImNyZWF0ZSIsInJlYWQiLCJ1cGRhdGUiLCJkZWxldGUiXSwic2luZ2xlVHlwZSI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInVzZXIiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJjcmVhdGVkQXQiOiIyMDI0LTA2LTA0VDA4OjI3OjA1Ljk3N1oiLCJ1cGRhdGVkQXQiOiIyMDI0LTA2LTEwVDAyOjQ4OjU2LjAxN1oiLCJfX3YiOjB9LCJpYXQiOjE3MTgyODI4NzV9.Ba56EyJHPqOFaaU1kqR5pZkVuq7kcnnMXfcM4zqQydk
 
 {
-    "name":"phamtruong",
-    "email":"vantruongvip25@gmail.com",
-    "password":"1",
-    "room":"663fb9f94ee01b4bc7248bd9",
-    "permissions":"665ecfd93037dfd77dbc66f2",
-    "positions":"663fba314ee01b4bc724ae48"
+    "name":"Đinh văn Quân",
+    "email":"quandv123@gmail.com",
+    "password":"123",
+    "permissions":"665ed2c03037dfd77dbc670d",
+    "positions":"66652fd1d3f862843a595b96"
     
 }
 
@@ -17,8 +16,8 @@ POST http://localhost:5000/api/users/login
 Content-Type: application/json
 
 {
-    "email":"truongkit102@gmail.com",
-    "password":"123"
+    "email":"truongpv@gmail.com",
+    "password":"1"
 }
 ###
 Put http://localhost:5000/api/users/update/666002e9161692c7517d4a18
@@ -44,6 +43,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTFjZ
 GET  http://localhost:5000/api/users/getUser/66600d32af0ba9021065c7ee
 Content-Type: application/json
 
+###
+GET  http://localhost:5000/api/users/getAllUserRoom/666d6916649cf0e2e21d8535
+Content-Type: application/json
+
 
 ###
 POST http://localhost:5000/api/users/forgotPassword
@@ -65,7 +68,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjYwM
 
 
 ###
-post http://localhost:5000/api/users/changePassword
+post http://localhost:5A74583000/api/users/changePassword
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjYwMGY2OWU0NTA4ZTk4N2FiNGIwYWUiLCJ1c2VyTmFtZSI6InB2dGJvdGR5IiwicGVybWlzc2lvbnMiOnsiX2lkIjoiNjY1ZWQyYzAzMDM3ZGZkNzdkYmM2NzBkIiwibmFtZSI6Ik5ow6JuIHZpw6puIiwic3RhdHVzIjoxLCJwZXJtaXNzaW9uIjpbInJlYWQiXSwicG9zaXRpb24iOlsicmVhZCJdLCJyb29tIjpbInJlYWQiXSwic2luZ2xlIjpbImNyZWF0ZSIsInJlYWQiLCJ1cGRhdGUiLCJkZWxldGUiXSwic2luZ2xlVHlwZSI6WyJyZWFkIl0sInVzZXIiOlsicmVhZCIsInVwZGF0ZSJdLCJjcmVhdGVkQXQiOiIyMDI0LTA2LTA0VDA4OjM5OjI4LjAxNVoiLCJ1cGRhdGVkQXQiOiIyMDI0LTA2LTA0VDA4OjM5OjI4LjAxNVoiLCJfX3YiOjB9LCJpYXQiOjE3MTc2NDU3ODV9._5pu6PMuC0rcQ7gWFMHwoo3eUbKLeikmruYoUH1ykJ0
 

@@ -8,6 +8,7 @@ const FromCustom = ({ open, onClose, handleSubmit, isEdit, dataRow, data }) => {
     id: null,
     name: "",
     room: "",
+    status: null,
   });
 
   const [listRoom, setListRoom] = useState([]);
@@ -17,7 +18,7 @@ const FromCustom = ({ open, onClose, handleSubmit, isEdit, dataRow, data }) => {
   const handleGetListRoom = async () => {
     try {
       const result = await apiGetRoom({
-        kkeySearch: "",
+        keySearch: "",
         page: 1,
         size: 100,
       });
@@ -65,6 +66,7 @@ const FromCustom = ({ open, onClose, handleSubmit, isEdit, dataRow, data }) => {
   useEffect(() => {
     handleGetListRoom();
   }, []);
+  console.log(formData);
 
   return (
     <Modal size="lg" show={open} onHide={handleClose}>
@@ -101,6 +103,19 @@ const FromCustom = ({ open, onClose, handleSubmit, isEdit, dataRow, data }) => {
                   {department.name}
                 </option>
               ))}
+            </select>
+          </div>
+          <div className="form-group">
+            <label htmlFor="sex">Trạng thái chức vụ:</label>
+            <select
+              className="form-select"
+              value={formData.status}
+              name="status"
+              onChange={(e) => handleSetFromData(e)}
+            >
+              <option value="">Chọn giới tính</option>
+              <option value={0}>0</option>
+              <option value={1}>1</option>
             </select>
           </div>
         </form>

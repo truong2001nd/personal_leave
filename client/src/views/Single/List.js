@@ -56,7 +56,7 @@ function ListSingle(props) {
             }
 
             if (content.key === "room") {
-              return { ...content, value: authState.user.room.name };
+              return { ...content, value: authState.user.positions.room.name };
             }
 
             return { ...content, value: "" };
@@ -84,7 +84,9 @@ function ListSingle(props) {
 
   const handleGetUserApprove = async () => {
     try {
-      const result = await apiGetRoomUserApprove(authState.user.room._id);
+      const result = await apiGetRoomUserApprove(
+        authState.user.positions.room._id
+      );
 
       if (result.data.status === 200) {
         setDataRoomApprover({
@@ -189,7 +191,10 @@ function ListSingle(props) {
                   }
 
                   if (content.key === "room") {
-                    return { ...content, value: authState.user.room.name };
+                    return {
+                      ...content,
+                      value: authState.user.positions.room.name,
+                    };
                   }
 
                   return { ...content, value: "" };

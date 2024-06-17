@@ -12,7 +12,6 @@ import "../../assets/style/account.css";
 const Account = () => {
   const { authState, dispatch } = useContext(AuthContext);
   const { user } = authState;
-
   // configure data
   const [dataFrom, setDataFrom] = useState({
     name: user.name,
@@ -110,8 +109,8 @@ const Account = () => {
           <Card>
             <RxAvatar className="icon-wrapper" style={{ width: "100%" }} />
             <Card.Body>
-              <Card.Title>Họ tên: Phạm văn trường</Card.Title>
-              <Card.Text> Chức vụ:{user.positions.name}</Card.Text>
+              <Card.Title>Họ tên: {user?.name}</Card.Title>
+              <Card.Text> Chức vụ:{user?.positions?.name}</Card.Text>
             </Card.Body>
           </Card>
         </Col>
@@ -123,14 +122,14 @@ const Account = () => {
               </Card.Title>
               <Row>
                 <Col>
-                  <p>Họ tên: {user.name}</p>
-                  <p>Email: {user.email}</p>
-                  <p>Phone: {user.phone}</p>
+                  <p>Họ tên: {user?.name}</p>
+                  <p>Email: {user?.email}</p>
+                  <p>Phone: {user?.phone}</p>
                 </Col>
                 <Col>
-                  <p>Ngày sinh:{user.birthday} </p>
-                  <p>Phòng ban: {user.room.name} </p>
-                  <p>Giới tính: {getSexText(user.sex)}</p>
+                  <p>Ngày sinh:{user?.birthday} </p>
+                  <p>Phòng ban: {user?.positions?.room?.name} </p>
+                  <p>Giới tính: {getSexText(user?.sex)}</p>
                 </Col>
               </Row>
               <Row>

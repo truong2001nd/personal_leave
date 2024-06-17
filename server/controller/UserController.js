@@ -10,6 +10,7 @@ const Room = require("../models/Rooms.js");
 const Position = require("../models/Positions.js");
 
 const sendMail = require("../helper/sendMail.js");
+const { request } = require("http");
 
 const loadUser = async (req, res) => {
   try {
@@ -18,13 +19,12 @@ const loadUser = async (req, res) => {
         path: "permissions",
       })
       .populate({
-        path: "room",
-        select: "name",
-      })
-      .populate({
         path: "positions",
-        select: "name",
+        populate: {
+          path: "room",
+        },
       })
+
       .select("-password");
 
     if (!user) return res.json({ status: 400, message: "User not found" });
@@ -50,12 +50,11 @@ const register = async (req, res, next) => {
     password,
     permissions,
     positions,
-    room,
     sex,
     phone,
     birthday,
   } = req.body;
-  if (!name || !email || !password || !permissions) {
+  if (!name || !email || !password || !permissions || !positions) {
     return res.json({ status: 422, message: "Sai dữ liệu đầu vào" });
   }
 
@@ -65,13 +64,6 @@ const register = async (req, res, next) => {
     if (userRelease) {
       return res.json({ status: 409, message: "Email đã tồn tại" });
     }
-
-    const roomRelease = await Room.findOne({ _id: room });
-
-    if (!roomRelease) {
-      return res.json({ status: 400, message: "Không tồn tại phòng ban" });
-    }
-
     const permissionRelease = await Permissions.findOne({ _id: permissions });
 
     if (!permissionRelease) {
@@ -92,7 +84,6 @@ const register = async (req, res, next) => {
       password: hashedPassword,
       permissions: permissionRelease,
       positions: positionRelease,
-      room: positionRelease,
       sex: sex || null,
       phone: phone || null,
       birthday: birthday || null,
@@ -172,7 +163,7 @@ const updateUser = async (req, res, next) => {
       message: "Tài khoản không  có quyền sửa đổi thông tin",
     });
   }
-  const { name, email, password, sex, phone, birthday } = req.body;
+  const { name, email, positions, permissions } = req.body;
   try {
     // kiểm tra xem email sửa đã tôn tại chưa và trừ trùng với tk cần sửa
     const existingUser = await User.findOne({
@@ -183,15 +174,11 @@ const updateUser = async (req, res, next) => {
       return res.json({ status: 400, message: " Email đã tồn tại" });
     }
 
-    const hashedPassword = await argon2.hash(password);
-
     let updateUser = {
       name,
-      password: hashedPassword,
       email,
-      sex: sex || 1,
-      phone: phone || "",
-      birthday: birthday || "",
+      positions,
+      permissions,
     };
 
     const newUser = await User.findOneAndUpdate(
@@ -285,20 +272,50 @@ const changePassword = async (req, res) => {
 // Xem tất cả các tài khoản
 const getAllUsers = async (req, res, next) => {
   try {
-    const userAll = await User.find()
+    const page = parseInt(req.query.page) || 1; // Trang hiện tại, mặc định là trang 1
+    const size = parseInt(req.query.size) || 5; // Số lượng mục trên mỗi trang, mặc định là 5
+    const keySearch = req.query.keySearch || ""; // Từ khóa tìm kiếm, mặc định là chuỗi rỗng
+    const positions = req.query.positions || "";
+    const permissions = req.query.permission || "";
+    const room = req.query.room || ""; // Từ khóa tìm kiếm, mặc định là chuỗi rỗng
+    const searchConditions = {};
+    if (keySearch) {
+      // Nếu có từ khóa tìm kiếm, thêm điều kiện tìm kiếm
+      searchConditions.name = { $regex: new RegExp(keySearch, "i") }; // Tìm kiếm tên permission không phân biệt chữ hoa, chữ thường
+    }
+
+    if (room) {
+      searchConditions.room = room;
+    }
+    if (positions) {
+      searchConditions.positions = positions;
+    }
+    if (permissions) {
+      searchConditions.permissions = permissions;
+    }
+    // Tìm kiếm và phân trang
+    const userAll = await User.find(searchConditions)
       .populate({
         path: "permissions",
         select: "name",
       })
       .populate({
-        path: "room",
-        select: "name",
-      })
-      .populate({
         path: "positions",
-        select: "name",
+        populate: { path: "room" },
       })
-      .select("-password");
+      .select("-password")
+      .skip((page - 1) * size) // Bỏ qua các mục trước đó
+      .limit(size); // Giới hạn số lượng mục trả về trên mỗi trang
+
+    const totalCount = await User.countDocuments(searchConditions);
+
+    if (userAll.length === 0) {
+      return res.json({
+        status: 200,
+        message: "Không tìm thấy chức vụ tương ứng",
+        data: userAll,
+      });
+    }
 
     if (!userAll) {
       return res.json({
@@ -307,12 +324,18 @@ const getAllUsers = async (req, res, next) => {
       });
     }
 
-    res.json({ status: 200, message: "Thành công", data: userAll });
+    res.json({
+      status: 200,
+      message: "Thành công",
+      totalCount: totalCount,
+      data: userAll,
+    });
   } catch (error) {
     console.log(error);
     res.json({ status: 500, message: "Dịch vụ bị gián đoạn" });
   }
 };
+
 const getUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id).select("-password");

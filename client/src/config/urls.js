@@ -8,6 +8,7 @@ const urls = {
   permission: "/permission",
   approveSingle: "/approve-single",
   createSingle: "/create-single",
+  accountManagement: "/account-Management",
 };
 
 export default urls;

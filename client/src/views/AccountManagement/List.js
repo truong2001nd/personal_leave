@@ -1,11 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import {
-  // TextField,
   Button,
-  // Box,
-  // Autocomplete,
-  // Tab,
-  // Tabs,
   Table,
   TableCell,
   TableBody,
@@ -14,18 +9,17 @@ import {
   TableRow,
   CardContent,
   Pagination,
-  // Modal,
   debounce,
 } from "@mui/material";
 import Select from "react-select";
-// import { MdEdit } from "react-icons/md";
 import { toast } from "react-toastify";
 import Create from "./Form/Create";
-import { dateFormatter } from "../../utils/dateFormatter";
-// import { FaTrash } from "react-icons/fa";
 import Update from "./Form/Update";
-import { apiGetPosition } from "../../service/api/position";
 import { apiGetRoom } from "../../service/api/room";
+import { apiGetAccount } from "../../service/api/account";
+import { apiGetPosition } from "../../service/api/position";
+import { apiGetPermission } from "../../service/api/listPermissions";
+import Forgotpassword from "./Form/Forgotpassword";
 
 const customSelect = {
   control: (base) => ({
@@ -42,22 +36,25 @@ const listResultValues = [
   { value: "50", label: "50" },
 ];
 
-function ListPosition(props) {
+function ListAccountManagement(props) {
   // configure data
   const [request, setRequest] = useState({
     keySearch: "",
     page: 1,
     size: 10,
     room: "",
+    positions: "",
+    permissions: "",
   });
 
+  const [listAccount, setListAccount] = useState([]);
   const [listRoom, setListRoom] = useState([]);
-
+  const [listPositions, setListPositions] = useState([]);
+  const [listPermission, setListPermission] = useState([]);
   // configure data
 
   // phân trang
 
-  const [rowsData, setRowsData] = useState([]);
   const [initIdPage, setInitIdPage] = useState(0);
   const [lastIdPage, setLastIdPage] = useState(0);
   const [totalRecord, setTotalRecord] = useState(0);
@@ -101,12 +98,12 @@ function ListPosition(props) {
 
   // call api
 
-  // Danh sách chức vụ
-  const handleGetList = async () => {
+  // Danh sách tài khoản
+  const handleGetList = async (url) => {
     try {
-      const result = await apiGetPosition(request);
+      const result = await apiGetAccount(url);
       if (result.data.status === 200) {
-        setRowsData(result.data.data);
+        setListAccount(result.data.data);
         setTotalRecord(result.data.totalCount);
       } else {
         toast.error(result.message);
@@ -117,6 +114,23 @@ function ListPosition(props) {
     }
   };
 
+  const handleGetPosition = async () => {
+    try {
+      const result = await apiGetPosition({
+        keySearch: "",
+        page: 1,
+        size: 100,
+      });
+      if (result.data.status === 200) {
+        setListPositions(result.data.data);
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.warning("Hệ thống đang bảo trì!");
+    }
+  };
   const handleGetListRoom = async () => {
     try {
       const result = await apiGetRoom({
@@ -126,6 +140,23 @@ function ListPosition(props) {
       });
       if (result.data.status === 200) {
         setListRoom(result.data.data);
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.warning("Hệ thống đang bảo trì!");
+    }
+  };
+  const handleGetPermission = async () => {
+    try {
+      const result = await apiGetPermission({
+        keySearch: "",
+        page: 1,
+        size: 100,
+      });
+      if (result.data.status === 200) {
+        setListPermission(result.data.data);
       } else {
         toast.error(result.message);
       }
@@ -149,20 +180,23 @@ function ListPosition(props) {
   //event handler
 
   useEffect(() => {
-    handleGetList();
+    handleGetList(request);
   }, [request]);
 
   useEffect(() => {
     handleGetListRoom();
+    handleGetPosition();
+    handleGetPermission();
   }, []);
-
   return (
     <div className="wrapper-screen-list">
       <div className="top-content">
         <div className="row">
           <div className="col-md-2">
             <div className="text-left">
-              <h3 className="heading-page text-uppercase">Chức vụ</h3>
+              <h4 className="heading-page text-uppercase">
+                Quản lý tài khoản người dùng
+              </h4>
             </div>
           </div>
           <div className="col-md-4 px-0">
@@ -170,7 +204,7 @@ function ListPosition(props) {
               <div>
                 <input
                   type="text"
-                  placeholder="Tên chức vụ"
+                  placeholder="Tên nhân viên"
                   className="inputSearch"
                   onChange={(e) => handleOnChangeSearch(e.target.value)}
                 />
@@ -183,6 +217,7 @@ function ListPosition(props) {
           <div className="col-md-6">
             <div className="d-flex justify-content-end">
               <Create handleGetList={handleGetList} />
+              <Forgotpassword handleGetList={handleGetList} />
 
               <Button
                 onClick={() => {
@@ -221,11 +256,57 @@ function ListPosition(props) {
               }}
             >
               <option value="">Chọn phòng ban</option>
-              {listRoom.map((department, index) => (
-                <option key={index} value={department._id}>
-                  {department.name}
-                </option>
-              ))}
+              {listRoom &&
+                listRoom.map((department, index) => (
+                  <option key={index} value={department._id}>
+                    {department.name}
+                  </option>
+                ))}
+            </select>
+            <select
+              className="form-select mt-2"
+              value={request.positions}
+              name="positions"
+              onChange={(e) => {
+                setRequest((prev) => {
+                  return {
+                    ...prev,
+                    positions: e.target.value,
+                    page: 1,
+                  };
+                });
+              }}
+            >
+              <option value="">Chọn chức vụ</option>
+              {listPositions &&
+                listPositions.map((department, index) => (
+                  <option key={index} value={department._id}>
+                    {department.name}
+                    <span> - Phòng ban: {department.room.name}</span>
+                  </option>
+                ))}
+            </select>
+            <select
+              className="form-select mt-2"
+              value={request.permission}
+              name="permission"
+              onChange={(e) => {
+                setRequest((prev) => {
+                  return {
+                    ...prev,
+                    permission: e.target.value,
+                    page: 1,
+                  };
+                });
+              }}
+            >
+              <option value="">Chọn Quyền</option>
+              {listPermission &&
+                listPermission.map((department, index) => (
+                  <option key={index} value={department._id}>
+                    {department.name}
+                  </option>
+                ))}
             </select>
           </div>
         </div>
@@ -235,10 +316,11 @@ function ListPosition(props) {
               <Table>
                 <TableHead>
                   <TableRow className="custom-table-head">
-                    <TableCell className="text-center">Tên Chức vụ</TableCell>
+                    <TableCell className="text-center">Tên nhân viên</TableCell>
+                    <TableCell className="text-center">Eamil</TableCell>
+                    <TableCell className="text-center">Chức vụ</TableCell>
                     <TableCell className="text-center">Phòng ban</TableCell>
-                    <TableCell className="text-center">Thời gian tạo</TableCell>
-                    <TableCell className="text-center">Ngày update</TableCell>
+                    <TableCell className="text-center">Phòng Quyền</TableCell>
                     <TableCell
                       className="text-center"
                       style={{ maxWidth: "100px" }}
@@ -246,8 +328,8 @@ function ListPosition(props) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rowsData && rowsData.length > 0 ? (
-                    rowsData.map((row, index) => (
+                  {listAccount && listAccount.length > 0 ? (
+                    listAccount.map((row, index) => (
                       <React.Fragment key={index}>
                         <TableRow
                           onClick={() => handleToggleRow(row.id)}
@@ -258,14 +340,17 @@ function ListPosition(props) {
                           </TableCell>
 
                           <TableCell className="text-center">
-                            {row?.room.name}
+                            {row?.email}
                           </TableCell>
 
                           <TableCell className="text-center">
-                            {dateFormatter(row?.createdAt)}
+                            {row?.positions.name}
                           </TableCell>
                           <TableCell className="text-center">
-                            {row?.status}
+                            {row?.positions.room.name}
+                          </TableCell>
+                          <TableCell className="text-center">
+                            {row?.permissions.name}
                           </TableCell>
                           <TableCell className="text-center">
                             <Update
@@ -302,7 +387,7 @@ function ListPosition(props) {
                   <span
                     style={{
                       marginTop: "1.5rem",
-                      display: rowsData.length > 0 ? "" : "none",
+                      display: listAccount.length > 0 ? "" : "none",
                     }}
                   >{`Hiển thị từ ${initIdPage} đến ${lastIdPage} trong tổng số ${totalRecord} kết quả`}</span>
                 </div>
@@ -320,7 +405,7 @@ function ListPosition(props) {
                   <span
                     className="px-2"
                     style={{
-                      display: rowsData.length > 0 ? "" : "none",
+                      display: listAccount.length > 0 ? "" : "none",
                     }}
                   >
                     Hiển thị
@@ -328,7 +413,7 @@ function ListPosition(props) {
                   <div
                     style={{
                       width: "90px",
-                      display: rowsData.length > 0 ? "" : "none",
+                      display: listAccount.length > 0 ? "" : "none",
                     }}
                   >
                     <Select
@@ -343,7 +428,7 @@ function ListPosition(props) {
                   <span
                     className="px-2"
                     style={{
-                      display: rowsData.length > 0 ? "" : "none",
+                      display: listAccount.length > 0 ? "" : "none",
                     }}
                   >
                     kết quả
@@ -355,7 +440,7 @@ function ListPosition(props) {
                   style={{
                     marginTop: "1.5rem",
                     float: "right",
-                    display: rowsData.length > 0 ? "" : "none",
+                    display: listAccount.length > 0 ? "" : "none",
                   }}
                   page={request.page}
                   count={Math.ceil(totalRecord / request.size)}
@@ -370,4 +455,4 @@ function ListPosition(props) {
   );
 }
 
-export default ListPosition;
+export default ListAccountManagement;

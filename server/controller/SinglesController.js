@@ -94,7 +94,7 @@ const getAllSingle = async (req, res) => {
 
   try {
     const page = parseInt(req.query.page) || 1; // Trang hiện tại, mặc định là trang 1
-    const limit = parseInt(req.query.limit) || 6; // Số lượng mục trên mỗi trang, mặc định là 5
+    const size = parseInt(req.query.size) || 6; // Số lượng mục trên mỗi trang, mặc định là 5
     const search = req.query.search || ""; // Từ khóa tìm kiếm, mặc định là chuỗi rỗng
     const singlesStyes = req.query.singlesStyes || ""; // Từ khóa tìm kiếm, mặc định là chuỗi rỗng
     const searchConditions = {};
@@ -108,7 +108,7 @@ const getAllSingle = async (req, res) => {
 
     // Tìm kiếm và phân trang
     const singleAll = await Singles.find({
-      sender: req.userId,
+      $or: [{ sender: req.userId }, { approver: req.userId }],
       ...searchConditions,
     })
       .populate({
@@ -119,11 +119,15 @@ const getAllSingle = async (req, res) => {
         path: "approver",
         select: "name _id",
       })
+      .populate({
+        path: "singlesStyes",
+        select: "name _id",
+      })
       .select(
-        "_id name content status singlesStyes sender approver createdAt updatedAt __v"
+        "_id name content status  sender approver createdAt updatedAt __v"
       )
-      .skip((page - 1) * limit) // Bỏ qua các mục trước đó
-      .limit(limit); // Giới hạn số lượng mục trả về trên mỗi trang
+      .skip((page - 1) * size) // Bỏ qua các mục trước đó
+      .limit(size); // Giới hạn số lượng mục trả về trên mỗi trang
 
     // Đếm số lượng Singles để tính tổng số trang
     const totalCount = await Singles.countDocuments(searchConditions);
@@ -168,7 +172,7 @@ const deleteSingle = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res0.json({ status: 500, message: "Dịch vụ bị gián đoạn" });
+    res.json({ status: 500, message: "Dịch vụ bị gián đoạn" });
   }
 };
 const updateSingle = async (req, res) => {
@@ -226,7 +230,7 @@ const updateSingle = async (req, res) => {
 
 // phệ duyệt đơn
 const approvalSingle = async (req, res) => {
-  if (!req.permissions.single.includes("update")) {
+  if (!req.permissions.singleType.includes("update")) {
     return res.json({
       status: 401,
       message: "Tài khoản không có quyền chỉnh sửa",
@@ -240,26 +244,68 @@ const approvalSingle = async (req, res) => {
     });
   }
 
+  // try {
+  //   const singleId = await Singles.findOne({ _id: req.params.id });
+  //   if (!singleId) {
+  //     return res.json({ status: 400, message: "ID đơn Không hợp lệ" });
+  //   }
+  //   if (singleId.status !== 0) {
+  //     return res.json({
+  //       status: 400,
+  //       message: "Đơn đã được phệ duyện hoặc từ chuối ",
+  //     });
+  //   }
+
+  //   let approvalSingle = {
+  //     status,
+  //   };
+  //   const newSingleId = await Singles.findOneAndUpdate(
+  //     { _id: req.params.id },
+  //     approvalSingle,
+  //     { new: true }
+  //   );
+  //   res.json({
+  //     status: 200,
+  //     message: "Phê duyệt  thành công!",
+  //     data: newSingleId,
+  //   });
+  // } catch (error) {}
   try {
     const singleId = await Singles.findOne({ _id: req.params.id });
     if (!singleId) {
       return res.json({ status: 400, message: "ID đơn Không hợp lệ" });
     }
+    if (singleId.status !== 0) {
+      return res.json({
+        status: 400,
+        message: "Đơn đã được phệ duyện hoặc từ chuối ",
+      });
+    }
 
-    let approvalSingle = {
-      status,
-    };
-    const newSingleId = await Singles.findOneAndUpdate(
-      { _id: req.params.id },
-      approvalSingle,
-      { new: true }
-    );
-    res.json({
-      status: 200,
-      message: "Phê duyệt  thành công!",
-      data: newSingleId,
-    });
-  } catch (error) {}
+    // Kiểm tra trạng thái một lần nữa trước khi cập nhật
+    if (singleId.status === 0) {
+      let approvalSingle = {
+        status,
+      };
+      const newSingleId = await Singles.findOneAndUpdate(
+        { _id: req.params.id },
+        approvalSingle,
+        { new: true }
+      );
+      res.json({
+        status: 200,
+        message: "Phê duyệt  thành công!",
+        data: newSingleId,
+      });
+    } else {
+      return res.json({
+        status: 400,
+        message: "Đơn đã được phệ duyện hoặc từ chuối ",
+      });
+    }
+  } catch (error) {
+    // Xử lý lỗi
+  }
 };
 
 module.exports = {
