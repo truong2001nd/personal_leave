@@ -63,7 +63,36 @@ const getRoomUserApprove = async (req, res) => {
     res.json({ status: 500, message: "Dịch vụ tạm thời giám đoạn" });
   }
 };
+const getRoomUser = async (req, res) => {
+  try {
+    const roomCondition = await Room.findOne({ _id: req.params.id });
+    if (!roomCondition) {
+      return res.json({ status: 400, message: "Phòng ban không đã tồn tại" });
+    }
+    const getUserRoom = await User.find()
+      .populate({
+        path: "permissions",
+        select: "name",
+      })
+      .populate({
+        path: "positions",
+        populate: { path: "room" },
+      })
+      .select("-password");
+    const user = getUserRoom.filter(
+      (data) =>
+        data.positions.room._id == req.params.id && data.positions.status == 0
+    );
 
+    res.json({
+      status: 200,
+      message: "Thành công",
+      data: user,
+    });
+  } catch (error) {
+    res.json({ status: 500, message: "Dịch vụ tạm thời giám đoạn" });
+  }
+};
 const getAllRoom = async (req, res) => {
   if (!req.permissions.room.includes("read")) {
     return res.json({
@@ -172,4 +201,5 @@ module.exports = {
   getAllRoom,
   updateRoom,
   deleteRoom,
+  getRoomUser,
 };

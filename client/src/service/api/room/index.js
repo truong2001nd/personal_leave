@@ -14,6 +14,12 @@ const apiGetRoomUserApprove = async (id) => {
     url: `${apiUrl}/room/getRoomUserApprove/${id}`,
   });
 };
+const apiGetRoomUser = async (id) => {
+  return axios({
+    method: "get",
+    url: `${apiUrl}/room/getRoomUser/${id}`,
+  });
+};
 const apiPostRoom = async (data) => {
   return axios({
     method: "post",
@@ -41,4 +47,5 @@ export {
   apiDeleteRoom,
   apiUpdateRoom,
   apiGetRoomUserApprove,
+  apiGetRoomUser,
 };

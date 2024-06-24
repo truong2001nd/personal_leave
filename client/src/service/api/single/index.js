@@ -9,6 +9,14 @@ const apiGetSingleType = async (data) => {
     params: data,
   });
 };
+// get loại đơn đã gửi
+const apiGetSingleReport = async (data) => {
+  return axios({
+    method: "get",
+    url: `${apiUrl}/single/getSingleReport`,
+    params: data,
+  });
+};
 // get đơn
 const apiGetSingle = async (data) => {
   return axios({
@@ -44,4 +52,5 @@ export {
   apiPostSingleType,
   apiDeleteRoom,
   apiUpdateApproval,
+  apiGetSingleReport,
 };

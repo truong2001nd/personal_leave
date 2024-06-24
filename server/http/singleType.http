@@ -59,12 +59,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTFjZ
 
 
 ###
-PUT  http://localhost:5000/api/singleType/update/6666bb7762b462ba8777f079
+PUT  http://localhost:5000/api/singleType/update/6666bb5662b462ba8777f076
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTFjZmUzZjk4NTA1MTNjODBiOTNkZmEiLCJwZXJtaXNzaW9ucyI6eyJfaWQiOiI2NTFjZDc0NTEzMDU2YjRmOTRhY2Y4NzkiLCJuYW1lIjoiYWRtaW4iLCJzdGF0dXMiOjEsInBlcm1pc3Npb24iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJwb3NpdGlvbiI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInJvb20iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJzaW5nbGUiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSIsImFwcHJvdmUiXSwic2luZ2xlVHlwZSI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInVzZXIiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJjcmVhdGVkQXQiOiIyMDIzLTEwLTA0VDAzOjA4OjUzLjMzOVoiLCJ1cGRhdGVkQXQiOiIyMDIzLTEwLTA0VDAzOjA4OjUzLjMzOVoiLCJfX3YiOjB9LCJpYXQiOjE2OTY2MDA2MDR9.1v3Y_tA83glkwGzLchPamHl31yCHOdKGT2bVaDxKEcI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjNmYjkyYTRlZTAxYjRiYzcyNDBkYWEiLCJ1c2VyTmFtZSI6ImFkbWluIiwicGVybWlzc2lvbnMiOnsiX2lkIjoiNjY2ZDY1ZTZjNDhkNTE3YTQ1M2FlN2Y1IiwibmFtZSI6ImFkbWluIiwic3RhdHVzIjoxLCJwZXJtaXNzaW9uIjpbImNyZWF0ZSIsInJlYWQiLCJ1cGRhdGUiLCJkZWxldGUiXSwicG9zaXRpb24iOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJyb29tIjpbImNyZWF0ZSIsInJlYWQiLCJ1cGRhdGUiLCJkZWxldGUiXSwic2luZ2xlIjpbImNyZWF0ZSIsInJlYWQiLCJ1cGRhdGUiLCJkZWxldGUiLCJhcHByb3ZlIl0sInNpbmdsZVR5cGUiOlsiY3JlYXRlIiwicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJ1c2VyIjpbImNyZWF0ZSIsInJlYWQiLCJ1cGRhdGUiLCJkZWxldGUiXSwiY3JlYXRlZEF0IjoiMjAyMy0xMC0wNFQwMzowODo1My4zMzlaIiwidXBkYXRlZEF0IjoiMjAyMy0xMC0wNFQwMzowODo1My4zMzlaIiwiX192IjowfSwiaWF0IjoxNzE4ODk0MTE0fQ.db6yM20xksW8cUyfFBGbt5j2FNRKQN2SEs88-pvtbmA
 
 {
-    "name": "Đơn xin việc riêng ",
+    "name": "Đơn xin nghỉ việc ",
     "content":[
         {
             "key":"fullName",
@@ -95,8 +95,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTFjZ
             "key":"approver",
             "label":"Người phê duyệt",
             "required": true
+        }, 
+        {
+            "key":"reasonRforRefusal",
+            "label":"Lý do từ chối"
+            
         }
-
     ],
     "status":0
 }

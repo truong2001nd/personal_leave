@@ -4,20 +4,20 @@ import { toast } from "react-toastify";
 import { apiGetSingle, apiGetSingleType } from "../../service/api/single";
 import {
   CardContent,
+  Pagination,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
 } from "@mui/material";
-import { Table } from "react-bootstrap";
+import { Col, Form, Row, Table } from "react-bootstrap";
 import Update from "../Home/Form/Update";
 import { dateFormatter } from "../../utils/dateFormatter";
 
 const Home = () => {
   const { authState } = useContext(AuthContext);
   const { user } = authState;
-
   const [dataFrom, setDataFrom] = useState([]);
   const [dataSingle, setSingle] = useState({});
   const [request, setRequest] = useState({
@@ -25,6 +25,7 @@ const Home = () => {
     page: 1,
     size: 10,
     singlesStyes: "",
+    date: "",
   });
   const [expandedRow, setExpandedRow] = useState(null);
   const handleToggleRow = (rowId) => {
@@ -34,6 +35,34 @@ const Home = () => {
       setExpandedRow(rowId);
     }
   };
+
+  // phân trang
+  const [initIdPage, setInitIdPage] = useState(0);
+  const [lastIdPage, setLastIdPage] = useState(0);
+  const [totalRecord, setTotalRecord] = useState(0);
+
+  const onPageClick = (data, value) => {
+    setRequest({ ...request, page: value });
+    window.scrollTo(0, 0);
+  };
+
+  const updateTotalPage = (totalRow, lastIdPage) => {
+    Boolean(totalRow === 0)
+      ? setInitIdPage(0)
+      : setInitIdPage((request.page - 1) * request.size + 1);
+    Boolean(lastIdPage < totalRow)
+      ? setLastIdPage(request.size * request.page)
+      : Boolean(totalRow === 0)
+      ? setLastIdPage(0)
+      : Boolean(request.page === Math.ceil(totalRow / request.size))
+      ? setLastIdPage(totalRow)
+      : setLastIdPage(request.size * request.page);
+  };
+
+  useEffect(() => {
+    updateTotalPage(totalRecord, lastIdPage);
+  }, [request, totalRecord, lastIdPage]);
+  // phân trang
   // Danh sách loai don
   const handleGetList = async () => {
     try {
@@ -57,25 +86,27 @@ const Home = () => {
     try {
       const result = await apiGetSingle(url);
       setSingle(result.data.data);
+      setTotalRecord(result.data.totalCount);
     } catch (error) {
       console.log(error);
       toast.warning("Hệ thống đang bảo trì!");
     }
   };
-
   useEffect(() => {
     handleGetList();
   }, [request]);
   useEffect(() => {
     handleGetlistSingle(request);
   }, [request]);
+  //
   return (
     <div className="body-content row">
       <div className="top-content">
         <div className="row">
-          <div className="col-md-2">
+          <div className="col-md-3">
             <div className="text-left">
               <h3 className="heading-page text-uppercase">
+                {" "}
                 {user.positions.status === 0 ? "Đơn đã gửi" : "Đơn gửi đến"}
               </h3>
             </div>
@@ -106,6 +137,29 @@ const Home = () => {
               </option>
             ))}
           </select>
+          <div className="form-group">
+            <Row className="mt-2">
+              <Col>
+                <Form.Group controlId="formName">
+                  <Form.Label></Form.Label>
+                  <Form.Control
+                    type="date"
+                    value={request.date}
+                    name="date"
+                    onChange={(e) =>
+                      setRequest((prev) => {
+                        return {
+                          ...prev,
+                          date: e.target.value,
+                          page: 1,
+                        };
+                      })
+                    }
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+          </div>
         </div>
       </div>
       <div className="col-md-9 custom-col-child-padding pl-0">
@@ -125,10 +179,12 @@ const Home = () => {
                     <TableCell className="text-center">
                       Trạng thái đơn
                     </TableCell>
-                    <TableCell
-                      className="text-center"
-                      style={{ maxWidth: "100px" }}
-                    ></TableCell>
+                    {authState.user.positions.status === 1 ? (
+                      <TableCell
+                        className="text-center"
+                        style={{ maxWidth: "100px" }}
+                      ></TableCell>
+                    ) : null}
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -172,13 +228,15 @@ const Home = () => {
                               </span>
                             )}
                           </TableCell>
-
-                          <TableCell className="text-center">
-                            <Update
-                              handleGetList={handleGetList}
-                              dataRow={row}
-                            />
-                          </TableCell>
+                          {authState.user.positions.status === 1 &&
+                          row.status === 0 ? (
+                            <TableCell className="text-center">
+                              <Update
+                                handleGetList={handleGetList}
+                                dataRow={row}
+                              />
+                            </TableCell>
+                          ) : null}
                         </TableRow>
                       </React.Fragment>
                     ))
@@ -202,73 +260,31 @@ const Home = () => {
               </Table>
             </TableContainer>
 
-            {/* <div className="d-flex justify-content-between mt-2">
+            <div className="d-flex justify-content-between mt-2">
               <div>
                 <div className="col d-flex align-self-center">
                   <span
                     style={{
                       marginTop: "1.5rem",
-                      display: rowsData.length > 0 ? "" : "none",
+                      display: dataSingle.length > 0 ? "" : "none",
                     }}
                   >{`Hiển thị từ ${initIdPage} đến ${lastIdPage} trong tổng số ${totalRecord} kết quả`}</span>
                 </div>
               </div>
-              <div>
-                <div
-                  className="col d-flex flex-row align-items-center align-items-center"
-                  style={{
-                    flexShrink: 0,
-                    flexGrow: 1,
-                    justifyContent: "center",
-                    marginTop: "18px",
-                  }}
-                >
-                  <span
-                    className="px-2"
-                    style={{
-                      display: rowsData.length > 0 ? "" : "none",
-                    }}
-                  >
-                    Hiển thị
-                  </span>
-                  <div
-                    style={{
-                      width: "90px",
-                      display: rowsData.length > 0 ? "" : "none",
-                    }}
-                  >
-                    <Select
-                      menuPlacement="auto"
-                      menuPosition="fixed"
-                      options={listResultValues}
-                      styles={customSelect}
-                      onChange={handleChangeResultValue}
-                      placeholder="10"
-                    />
-                  </div>
-                  <span
-                    className="px-2"
-                    style={{
-                      display: rowsData.length > 0 ? "" : "none",
-                    }}
-                  >
-                    kết quả
-                  </span>
-                </div>
-              </div>
+              <div></div>
               <div>
                 <Pagination
                   style={{
                     marginTop: "1.5rem",
                     float: "right",
-                    display: rowsData.length > 0 ? "" : "none",
+                    display: dataSingle.length > 0 ? "" : "none",
                   }}
                   page={request.page}
                   count={Math.ceil(totalRecord / request.size)}
                   onChange={onPageClick}
                 />
               </div>
-            </div> */}
+            </div>
           </CardContent>
         </CardContent>
       </div>

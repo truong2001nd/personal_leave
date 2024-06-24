@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { CardContent } from "@mui/material";
 import { toast } from "react-toastify";
 import { apiGetSingleType, apiPostSingleType } from "../../service/api/single";
-import { Button, Col, Form, NavLink, Row } from "react-bootstrap";
+import { Button, Col, Form, Row } from "react-bootstrap";
 import { AuthContext } from "../../contexts/AuthContext";
 import { apiGetRoomUserApprove } from "../../service/api/room";
 import config from "../../config";
@@ -17,7 +17,7 @@ function ListSingle(props) {
     name: "",
     content: [],
     status: 0,
-    singlesStyes: null,
+    singlesStyes: {},
     sender: authState.user._id,
     approver: null,
   });
@@ -58,6 +58,12 @@ function ListSingle(props) {
             if (content.key === "room") {
               return { ...content, value: authState.user.positions.room.name };
             }
+            if (content.key === "requestDate") {
+              return {
+                ...content,
+                value: new Date().toISOString().slice(0, 10),
+              };
+            }
 
             return { ...content, value: "" };
           }
@@ -69,6 +75,7 @@ function ListSingle(props) {
         setDataFrom((prev) => {
           return {
             ...prev,
+            name: result.data.data[0].name,
             singlesStyes: result.data.data[0]._id,
             content: newContent,
           };
@@ -82,11 +89,9 @@ function ListSingle(props) {
     }
   };
 
-  const handleGetUserApprove = async () => {
+  const handleGetUserApprove = async (id) => {
     try {
-      const result = await apiGetRoomUserApprove(
-        authState.user.positions.room._id
-      );
+      const result = await apiGetRoomUserApprove(id);
 
       if (result.data.status === 200) {
         setDataRoomApprover({
@@ -115,7 +120,11 @@ function ListSingle(props) {
   const handleInputChangeContent = (e) => {
     const newContent = dataFrom.content.map((content) => {
       if (content.key === e.target.name) {
-        return { ...content, value: e.target.value };
+        if (e.target.name === "numberOfDays" && e.target.value < 0) {
+          toast.error("Số ngày nghỉ lớn hơn 0");
+        } else {
+          return { ...content, value: e.target.value };
+        }
       }
       return content;
     });
@@ -153,8 +162,8 @@ function ListSingle(props) {
     handleGetList();
   }, []);
   useEffect(() => {
-    handleGetUserApprove();
-  }, []);
+    handleGetUserApprove(authState.user.positions.room._id);
+  }, [authState.user.positions.room._id]);
   return (
     <div className="wrapper-screen-list">
       <div className="top-content">
@@ -238,6 +247,7 @@ function ListSingle(props) {
                       name="name"
                       value={dataFrom.name}
                       onChange={handleInputChange}
+                      disabled
                       required
                     />
                   </Form.Group>
@@ -309,11 +319,82 @@ function ListSingle(props) {
                         </Col>
                       </Row>
                     );
-                  } else if (
-                    data.key === "countedFromDate" ||
-                    data.key === "toDate" ||
-                    data.key === "requestDate"
-                  ) {
+                  } else if (data.key === "numberOfDays") {
+                    return (
+                      <Row className="mt-2" key={data.key}>
+                        <Col>
+                          <Form.Group controlId="formName">
+                            <Form.Label>
+                              {data.label}
+                              {data.required ? "(*)" : ""}
+                            </Form.Label>
+                            <Form.Control
+                              type="number"
+                              name={data.key}
+                              required={data.required}
+                              value={data.value}
+                              onChange={handleInputChangeContent}
+                            />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                    );
+                  } else if (data.key === "countedFromDate") {
+                    const toDate = dataFrom.content.find(
+                      (d) => d.key === "toDate"
+                    );
+                    const maxToDate = toDate
+                      ? toDate.value
+                      : new Date().toISOString().slice(0, 10);
+                    return (
+                      <Row className="mt-2" key={data.key}>
+                        <Col>
+                          <Form.Group controlId="formName">
+                            <Form.Label>
+                              {data.label}
+                              {data.required ? "(*)" : ""}
+                            </Form.Label>
+                            <Form.Control
+                              type="datetime-local"
+                              name={data.key}
+                              required={data.required}
+                              value={data.value}
+                              onChange={handleInputChangeContent}
+                              min={new Date().toISOString().slice(0, 16)}
+                              max={maxToDate}
+                            />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                    );
+                  } else if (data.key === "toDate") {
+                    const countedFromDateField = dataFrom.content.find(
+                      (d) => d.key === "countedFromDate"
+                    );
+                    const minDate = countedFromDateField
+                      ? countedFromDateField.value
+                      : new Date().toISOString().slice(0, 10);
+                    return (
+                      <Row className="mt-2" key={data.key}>
+                        <Col>
+                          <Form.Group controlId="formName">
+                            <Form.Label>
+                              {data.label}
+                              {data.required ? "(*)" : ""}
+                            </Form.Label>
+                            <Form.Control
+                              type="datetime-local"
+                              name={data.key}
+                              required={data.required}
+                              value={data.value}
+                              onChange={handleInputChangeContent}
+                              min={minDate}
+                            />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                    );
+                  } else if (data.key === "requestDate") {
                     return (
                       <Row className="mt-2" key={data.key}>
                         <Col>
@@ -326,8 +407,9 @@ function ListSingle(props) {
                               type="date"
                               name={data.key}
                               required={data.required}
-                              value={data.value}
+                              value={new Date().toISOString().slice(0, 10)}
                               onChange={handleInputChangeContent}
+                              disabled
                             />
                           </Form.Group>
                         </Col>

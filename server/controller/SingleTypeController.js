@@ -130,7 +130,6 @@ const updateSingleType = async (req, res) => {
   }
   try {
     const singleTypeId = await SingleType.findOne({ _id: req.params.id });
-    console.log(singleTypeId);
     if (!singleTypeId) {
       return res.json({ status: 400, message: "Id loại Đơn không hợp lệ" });
     }

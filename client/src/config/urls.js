@@ -9,6 +9,7 @@ const urls = {
   approveSingle: "/approve-single",
   createSingle: "/create-single",
   accountManagement: "/account-Management",
+  statistical: "/statistical",
 };
 
 export default urls;

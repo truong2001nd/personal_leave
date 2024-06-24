@@ -6,12 +6,12 @@ const FromCustom = ({ open, onClose, handleSubmit, isEdit, dataRow, data }) => {
   const handleClose = () => {
     onClose();
   };
-
+  const [reasonForRefusal, setReasonForRefusal] = useState("");
   const onSubmit = async (e, action) => {
     e.preventDefault();
     dataRow.status = action === "approve" ? 1 : 2;
-    const res = await handleSubmit(dataRow);
 
+    const res = await handleSubmit({ ...dataRow, note: reasonForRefusal });
     if (res.success) {
       handleClose();
     }
@@ -19,9 +19,7 @@ const FromCustom = ({ open, onClose, handleSubmit, isEdit, dataRow, data }) => {
   return (
     <Modal size="lg" show={open} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>
-          {isEdit ? "Chỉnh sửa Chức vụ" : "Tạo chức vụ"}{" "}
-        </Modal.Title>
+        <Modal.Title>{isEdit ? "Phê duyệt đơn" : ""} </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <form>
@@ -32,7 +30,7 @@ const FromCustom = ({ open, onClose, handleSubmit, isEdit, dataRow, data }) => {
                 <Form.Control
                   type="text"
                   name="name"
-                  value={dataRow.name}
+                  value={dataRow.singlesStyes.name}
                   required
                   disabled
                 />
@@ -82,6 +80,19 @@ const FromCustom = ({ open, onClose, handleSubmit, isEdit, dataRow, data }) => {
                 </Row>
               );
             })}
+          <Row>
+            <Col>
+              <Form.Group>
+                <Form.Label>Lí do từ chối(Nếu từ chối)</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="reasonRorRefusal"
+                  value={reasonForRefusal}
+                  onChange={(e) => setReasonForRefusal(e.target.value)}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
         </form>
       </Modal.Body>
       <Modal.Footer>

@@ -71,7 +71,10 @@ const AuthContextProvider = ({ children }) => {
   const logout = async () => {
     localStorage.removeItem(LOCAL_STORAGE_TOKEN_NAME);
     setAuthToken(null);
-    await loadUser();
+    dispatch({
+      type: "SET_AUTH",
+      payload: { isAuthenticated: false, user: null },
+    });
   };
 
   // context data

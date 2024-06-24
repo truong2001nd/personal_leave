@@ -96,14 +96,34 @@ const getAllSingle = async (req, res) => {
     const page = parseInt(req.query.page) || 1; // Trang hiện tại, mặc định là trang 1
     const size = parseInt(req.query.size) || 6; // Số lượng mục trên mỗi trang, mặc định là 5
     const search = req.query.search || ""; // Từ khóa tìm kiếm, mặc định là chuỗi rỗng
-    const singlesStyes = req.query.singlesStyes || ""; // Từ khóa tìm kiếm, mặc định là chuỗi rỗng
+    const singlesStyes = req.query.singlesStyes || "";
+    const date = req.query.date || "";
     const searchConditions = {};
     if (search) {
       // Nếu có từ khóa tìm kiếm, thêm điều kiện tìm kiếm
-      searchConditions.singlesStyes = { $regex: new RegExp(search, "i") }; // Tìm kiếm tên permission không phân biệt chữ hoa, chữ thường
+      searchConditions.sender.name = { $regex: new RegExp(search, "i") }; // Tìm kiếm tên permission không phân biệt chữ hoa, chữ thường
     }
     if (singlesStyes) {
       searchConditions.singlesStyes = singlesStyes;
+    }
+    if (date) {
+      // Nếu có ngày tháng, tính toán khoảng thời gian tìm kiếm
+      const searchDate = new Date(date);
+      const startOfDay = new Date(
+        searchDate.getFullYear(),
+        searchDate.getMonth(),
+        searchDate.getDate()
+      );
+      const endOfDay = new Date(
+        searchDate.getFullYear(),
+        searchDate.getMonth(),
+        searchDate.getDate() + 1
+      );
+
+      searchConditions.createdAt = {
+        $gte: startOfDay,
+        $lt: endOfDay,
+      };
     }
 
     // Tìm kiếm và phân trang
@@ -130,7 +150,10 @@ const getAllSingle = async (req, res) => {
       .limit(size); // Giới hạn số lượng mục trả về trên mỗi trang
 
     // Đếm số lượng Singles để tính tổng số trang
-    const totalCount = await Singles.countDocuments(searchConditions);
+    const totalCount = await Singles.countDocuments({
+      $or: [{ sender: req.userId }, { approver: req.userId }],
+      ...searchConditions,
+    });
 
     if (!singleAll) {
       return res.json({ status: 401, message: "Chưa có đơn nào được tạo!" });
@@ -141,6 +164,67 @@ const getAllSingle = async (req, res) => {
       message: "Thành công",
       totalCount: totalCount,
       data: singleAll,
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ status: 500, message: "Dịch vụ bị gián đoạn" });
+  }
+};
+
+const getSingleReport = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1; // Trang hiện tại, mặc định là trang 1
+    const size = parseInt(req.query.size) || 5; // Số lượng mục trên mỗi trang, mặc định là 5
+    const keySearch = req.query.keySearch || ""; // Từ khóa tìm kiếm, mặc định là chuỗi rỗng
+    const user = req.query.user || ""; // Từ khóa tìm kiếm, mặc định là chuỗi rỗng
+    const searchConditions = {};
+    if (keySearch) {
+      // Nếu có từ khóa tìm kiếm, thêm điều kiện tìm kiếm
+      searchConditions.sender.name = { $regex: new RegExp(search, "i") }; // Tìm kiếm tên permission không phân biệt chữ hoa, chữ thường
+    }
+    if (user) {
+      searchConditions.sender = user;
+    }
+
+    const singleAll = await Singles.find({
+      $or: [{ sender: req.userId }, { approver: req.userId }],
+      ...searchConditions,
+    });
+    const singleTypeAll = await SingleType.find()
+      .select("name _id")
+      .skip((page - 1) * size) // Bỏ qua các mục trước đó
+      .limit(size); // Giới hạn số lượng mục trả về trên mỗi trang;
+
+    const result = singleTypeAll.map((typeSingle) => {
+      return {
+        name: typeSingle.name,
+        countApproval: singleAll.filter(
+          (single) =>
+            String(single.singlesStyes) == String(typeSingle._id) &&
+            single.status == 1
+        ).length,
+        countRefuse: singleAll.filter(
+          (single) =>
+            String(single.singlesStyes) == String(typeSingle._id) &&
+            single.status == 2
+        ).length,
+        countPending: singleAll.filter(
+          (single) =>
+            String(single.singlesStyes) == String(typeSingle._id) &&
+            single.status == 0
+        ).length,
+      };
+    });
+    // Đếm số lượng Singles để tính tổng số trang
+    const totalCount = await Singles.countDocuments({
+      ...searchConditions,
+    });
+
+    res.json({
+      status: 200,
+      message: "Thành công",
+      totalCount: totalCount,
+      data: result,
     });
   } catch (error) {
     console.log(error);
@@ -244,32 +328,6 @@ const approvalSingle = async (req, res) => {
     });
   }
 
-  // try {
-  //   const singleId = await Singles.findOne({ _id: req.params.id });
-  //   if (!singleId) {
-  //     return res.json({ status: 400, message: "ID đơn Không hợp lệ" });
-  //   }
-  //   if (singleId.status !== 0) {
-  //     return res.json({
-  //       status: 400,
-  //       message: "Đơn đã được phệ duyện hoặc từ chuối ",
-  //     });
-  //   }
-
-  //   let approvalSingle = {
-  //     status,
-  //   };
-  //   const newSingleId = await Singles.findOneAndUpdate(
-  //     { _id: req.params.id },
-  //     approvalSingle,
-  //     { new: true }
-  //   );
-  //   res.json({
-  //     status: 200,
-  //     message: "Phê duyệt  thành công!",
-  //     data: newSingleId,
-  //   });
-  // } catch (error) {}
   try {
     const singleId = await Singles.findOne({ _id: req.params.id });
     if (!singleId) {
@@ -314,4 +372,5 @@ module.exports = {
   deleteSingle,
   updateSingle,
   approvalSingle,
+  getSingleReport,
 };

@@ -13,6 +13,7 @@ import ListPosition from "../views/Position/List.js";
 import ListPermissions from "../views/Permissions/List.js";
 import ListSingle from "../views/Single/List.js";
 import ListAccountManagement from "../views/AccountManagement/List.js";
+import ListStatistical from "../views/Statistical/List.js";
 
 const RootRouter = () => {
   const {
@@ -49,6 +50,11 @@ const RootRouter = () => {
               exact
               path={config.urls.accountManagement}
               element={<ListAccountManagement />}
+            />
+            <Route
+              exact
+              path={config.urls.statistical}
+              element={<ListStatistical />}
             />
             <Route
               exact

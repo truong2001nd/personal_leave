@@ -11,6 +11,10 @@ const Singles = new Schema(
     content: {
       type: String,
     },
+    note: {
+      type: String,
+    },
+
     status: { type: Number, enum: [0, 1, 2] },
     singlesStyes: {
       type: Schema.Types.ObjectId,
