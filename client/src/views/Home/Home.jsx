@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { Col, Form, Row, Table } from "react-bootstrap";
 import Update from "../Home/Form/Update";
+import Read from "../Home/Form/Read";
 import { dateFormatter } from "../../utils/dateFormatter";
 
 const Home = () => {
@@ -189,7 +190,7 @@ const Home = () => {
                 </TableHead>
                 <TableBody>
                   {dataSingle && dataSingle.length > 0 ? (
-                    dataSingle.map((row, index) => (
+                    dataSingle.reverse().map((row, index) => (
                       <React.Fragment key={index}>
                         <TableRow
                           onClick={() => handleToggleRow(row.id)}
@@ -203,11 +204,10 @@ const Home = () => {
                           </TableCell>
 
                           <TableCell className="text-center">
-                            {row?.name} - lí do:
-                            {row?.content &&
-                              JSON.parse(row?.content).find(
-                                (content) => content.key === "reason"
-                              )?.value}
+                            <Read
+                              handleGetList={handleGetList}
+                              dataRow={row}
+                            ></Read>
                           </TableCell>
 
                           <TableCell className="text-center">

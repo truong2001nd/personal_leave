@@ -14,6 +14,7 @@ import ListPermissions from "../views/Permissions/List.js";
 import ListSingle from "../views/Single/List.js";
 import ListAccountManagement from "../views/AccountManagement/List.js";
 import ListStatistical from "../views/Statistical/List.js";
+import Loginlayout from "../layout/Loginlayout.jsx";
 
 const RootRouter = () => {
   const {
@@ -66,12 +67,12 @@ const RootRouter = () => {
       );
     } else {
       body = (
-        <DefaultLayout showHeader={false}>
+        <Loginlayout showHeader={false}>
           <Routes>
             <Route path={config.urls.login} element={<Login />} />
             <Route path="*" element={<Navigate to={config.urls.login} />} />
           </Routes>
-        </DefaultLayout>
+        </Loginlayout>
       );
     }
   }

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Row, Col, Form } from "react-bootstrap";
-import { toast } from "react-toastify";
 
 const FromCustom = ({ open, onClose, handleSubmit, isEdit, dataRow, data }) => {
   const handleClose = () => {

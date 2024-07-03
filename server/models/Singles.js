@@ -6,7 +6,6 @@ const Singles = new Schema(
     name: {
       type: String, //kiểu chữ
       required: true, //bắt buộc phải có
-      unique: true, //không được trùng lặp
     },
     content: {
       type: String,

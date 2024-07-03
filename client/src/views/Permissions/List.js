@@ -194,7 +194,7 @@ function ListPermissions(props) {
                     <TableCell className="text-center">Chức vụ</TableCell>
                     <TableCell className="text-center">Phòng ban</TableCell>
                     <TableCell className="text-center">Đơn</TableCell>
-                    <TableCell className="text-center">Loại Đơn</TableCell>
+                    <TableCell className="text-center">Phê duyệt</TableCell>
                     <TableCell className="text-center">Trạng thái</TableCell>
                     <TableCell
                       className="text-center"

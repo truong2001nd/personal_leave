@@ -7,12 +7,17 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { apiGetRoomUserApprove } from "../../service/api/room";
 import config from "../../config";
 import { useNavigate } from "react-router-dom";
+import { generateUUID } from "../../utils/funtions";
 
 function ListSingle(props) {
   const { authState } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [dataSinglesStyes, setDataSinglesStyes] = useState([]);
   // configure data
-
+  const [dataOptionType, setDataOptionType] = useState({
+    options: [],
+    value: null,
+  });
   const [dataFrom, setDataFrom] = useState({
     name: "",
     content: [],
@@ -22,13 +27,15 @@ function ListSingle(props) {
     approver: null,
   });
 
-  const [dataOptionType, setDataOptionType] = useState({
-    options: [],
-    value: null,
-  });
   const [dataRoomApprover, setDataRoomApprover] = useState({
     options: [],
     value: null,
+  });
+  const [request, setRequest] = useState({
+    keySearch: "",
+    page: 1,
+    size: 1000,
+    _id: null,
   });
 
   // configure data
@@ -36,7 +43,7 @@ function ListSingle(props) {
   // call api
 
   // Danh sách loai don
-  const handleGetList = async () => {
+  const handleGetListSinglesStyes = async () => {
     try {
       const result = await apiGetSingleType({
         keySearch: "",
@@ -44,6 +51,20 @@ function ListSingle(props) {
         size: 1000,
         _id: null,
       });
+      if (result.data.status === 200) {
+        setDataSinglesStyes(result.data.data);
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.warning("Hệ thống đang bảo trì!");
+    }
+  };
+  const handleGetList = async (url) => {
+    console.log("vo day");
+    try {
+      const result = await apiGetSingleType(url);
       if (result.data.status === 200) {
         const newContent = JSON.parse(result.data.data[0].content).map(
           (content) => {
@@ -68,6 +89,7 @@ function ListSingle(props) {
             return { ...content, value: "" };
           }
         );
+
         setDataOptionType({
           options: result.data.data,
           value: result.data.data[0],
@@ -113,7 +135,6 @@ function ListSingle(props) {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-
     setDataFrom({ ...dataFrom, [name]: value });
   };
 
@@ -126,6 +147,7 @@ function ListSingle(props) {
           return { ...content, value: e.target.value };
         }
       }
+
       return content;
     });
     if (e.target.name === "approver") {
@@ -138,7 +160,6 @@ function ListSingle(props) {
       setDataFrom({ ...dataFrom, content: newContent });
     }
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -159,7 +180,10 @@ function ListSingle(props) {
   //event handler
 
   useEffect(() => {
-    handleGetList();
+    handleGetList(request);
+  }, [request]);
+  useEffect(() => {
+    handleGetListSinglesStyes();
   }, []);
   useEffect(() => {
     handleGetUserApprove(authState.user.positions.room._id);
@@ -186,48 +210,16 @@ function ListSingle(props) {
               value={dataFrom.singlesStyes}
               name="singlesStyes"
               onChange={(e) => {
-                const newContent = JSON.parse(
-                  dataOptionType.options.find(
-                    (option) => option._id === e.target.value
-                  ).content
-                ).map((content) => {
-                  if (content.key === "fullName") {
-                    return { ...content, value: authState.user.name };
-                  }
-
-                  if (content.key === "position") {
-                    return { ...content, value: authState.user.positions.name };
-                  }
-
-                  if (content.key === "room") {
-                    return {
-                      ...content,
-                      value: authState.user.positions.room.name,
-                    };
-                  }
-
-                  return { ...content, value: "" };
-                });
-
-                setDataFrom((prev) => {
+                setRequest((prev) => {
                   return {
                     ...prev,
-                    singlesStyes: e.target.value,
-                    content: newContent,
-                  };
-                });
-
-                setDataOptionType((prev) => {
-                  return {
-                    ...prev,
-                    value: dataOptionType.options.find(
-                      (option) => option._id === e.target.value
-                    ),
+                    _id: e.target.value,
+                    page: 1,
                   };
                 });
               }}
             >
-              {dataOptionType.options.map((department, index) => (
+              {dataSinglesStyes?.map((department, index) => (
                 <option key={index} value={department._id}>
                   {department.name}
                 </option>
@@ -245,7 +237,7 @@ function ListSingle(props) {
                     <Form.Control
                       type="text"
                       name="name"
-                      value={dataFrom.name}
+                      value={dataOptionType?.value?.name}
                       onChange={handleInputChange}
                       disabled
                       required
@@ -253,200 +245,10 @@ function ListSingle(props) {
                   </Form.Group>
                 </Col>
               </Row>
-
-              {dataFrom.content &&
-                dataFrom.content.map((data, i) => {
-                  if (data.key === "fullName") {
-                    return (
-                      <Row className="mt-2" key={data.key}>
-                        <Col>
-                          <Form.Group controlId="formName">
-                            <Form.Label>
-                              {data.label}
-                              {data.required ? "(*)" : ""}
-                            </Form.Label>
-                            <Form.Control
-                              type="text"
-                              name={data.key}
-                              required={data.required}
-                              value={data.value}
-                              disabled
-                              onChange={(e) => handleInputChange(e)}
-                            />
-                          </Form.Group>
-                        </Col>
-                      </Row>
-                    );
-                  } else if (data.key === "position") {
-                    return (
-                      <Row className="mt-2" key={data.key}>
-                        <Col>
-                          <Form.Group controlId="formName">
-                            <Form.Label>
-                              {data.label}
-                              {data.required ? "(*)" : ""}
-                            </Form.Label>
-                            <Form.Control
-                              type="text"
-                              name={data.key}
-                              required={data.required}
-                              value={authState.user.positions.name}
-                              disabled
-                              onChange={handleInputChangeContent}
-                            />
-                          </Form.Group>
-                        </Col>
-                      </Row>
-                    );
-                  } else if (data.key === "room") {
-                    return (
-                      <Row className="mt-2" key={data.key}>
-                        <Col>
-                          <Form.Group controlId="formName">
-                            <Form.Label>
-                              {data.label}
-                              {data.required ? "(*)" : ""}
-                            </Form.Label>
-                            <Form.Control
-                              type="text"
-                              name={data.key}
-                              required={data.required}
-                              disabled
-                              value={data.value}
-                              onChange={handleInputChangeContent}
-                            />
-                          </Form.Group>
-                        </Col>
-                      </Row>
-                    );
-                  } else if (data.key === "numberOfDays") {
-                    return (
-                      <Row className="mt-2" key={data.key}>
-                        <Col>
-                          <Form.Group controlId="formName">
-                            <Form.Label>
-                              {data.label}
-                              {data.required ? "(*)" : ""}
-                            </Form.Label>
-                            <Form.Control
-                              type="number"
-                              name={data.key}
-                              required={data.required}
-                              value={data.value}
-                              onChange={handleInputChangeContent}
-                            />
-                          </Form.Group>
-                        </Col>
-                      </Row>
-                    );
-                  } else if (data.key === "countedFromDate") {
-                    const toDate = dataFrom.content.find(
-                      (d) => d.key === "toDate"
-                    );
-                    const maxToDate = toDate
-                      ? toDate.value
-                      : new Date().toISOString().slice(0, 10);
-                    return (
-                      <Row className="mt-2" key={data.key}>
-                        <Col>
-                          <Form.Group controlId="formName">
-                            <Form.Label>
-                              {data.label}
-                              {data.required ? "(*)" : ""}
-                            </Form.Label>
-                            <Form.Control
-                              type="datetime-local"
-                              name={data.key}
-                              required={data.required}
-                              value={data.value}
-                              onChange={handleInputChangeContent}
-                              min={new Date().toISOString().slice(0, 16)}
-                              max={maxToDate}
-                            />
-                          </Form.Group>
-                        </Col>
-                      </Row>
-                    );
-                  } else if (data.key === "toDate") {
-                    const countedFromDateField = dataFrom.content.find(
-                      (d) => d.key === "countedFromDate"
-                    );
-                    const minDate = countedFromDateField
-                      ? countedFromDateField.value
-                      : new Date().toISOString().slice(0, 10);
-                    return (
-                      <Row className="mt-2" key={data.key}>
-                        <Col>
-                          <Form.Group controlId="formName">
-                            <Form.Label>
-                              {data.label}
-                              {data.required ? "(*)" : ""}
-                            </Form.Label>
-                            <Form.Control
-                              type="datetime-local"
-                              name={data.key}
-                              required={data.required}
-                              value={data.value}
-                              onChange={handleInputChangeContent}
-                              min={minDate}
-                            />
-                          </Form.Group>
-                        </Col>
-                      </Row>
-                    );
-                  } else if (data.key === "requestDate") {
-                    return (
-                      <Row className="mt-2" key={data.key}>
-                        <Col>
-                          <Form.Group controlId="formName">
-                            <Form.Label>
-                              {data.label}
-                              {data.required ? "(*)" : ""}
-                            </Form.Label>
-                            <Form.Control
-                              type="date"
-                              name={data.key}
-                              required={data.required}
-                              value={new Date().toISOString().slice(0, 10)}
-                              onChange={handleInputChangeContent}
-                              disabled
-                            />
-                          </Form.Group>
-                        </Col>
-                      </Row>
-                    );
-                  } else if (data.key === "approver") {
-                    return (
-                      <Row className="mt-2" key={data.key}>
-                        <Col>
-                          <Form.Group controlId="formName">
-                            <Form.Label>
-                              {data.label}
-                              {data.required ? "(*)" : ""}
-                            </Form.Label>
-                            <select
-                              className="form-select"
-                              name={data.key}
-                              required={data.required}
-                              value={data.value}
-                              onChange={handleInputChangeContent}
-                            >
-                              {dataRoomApprover.options.map((userApprove) => (
-                                <option
-                                  key={userApprove._id}
-                                  value={userApprove._id}
-                                >
-                                  {userApprove.name}
-                                </option>
-                              ))}
-                            </select>
-                          </Form.Group>
-                        </Col>
-                      </Row>
-                    );
-                  }
+              {dataFrom.content.map((data, i) => {
+                if (data.key === "fullName") {
                   return (
-                    <Row className="mt-2" key={data.key}>
+                    <Row className="mt-2" key={generateUUID()}>
                       <Col>
                         <Form.Group controlId="formName">
                           <Form.Label>
@@ -458,13 +260,202 @@ function ListSingle(props) {
                             name={data.key}
                             required={data.required}
                             value={data.value}
+                            disabled
+                            onChange={(e) => handleInputChange(e)}
+                          />
+                        </Form.Group>
+                      </Col>
+                    </Row>
+                  );
+                } else if (data.key === "position") {
+                  return (
+                    <Row className="mt-2" key={generateUUID()}>
+                      <Col>
+                        <Form.Group controlId="formName">
+                          <Form.Label>
+                            {data.label}
+                            {data.required ? "(*)" : ""}
+                          </Form.Label>
+                          <Form.Control
+                            type="text"
+                            name={data.key}
+                            required={data.required}
+                            value={authState.user.positions.name}
+                            disabled
                             onChange={handleInputChangeContent}
                           />
                         </Form.Group>
                       </Col>
                     </Row>
                   );
-                })}
+                } else if (data.key === "room") {
+                  return (
+                    <Row className="mt-2" key={generateUUID()}>
+                      <Col>
+                        <Form.Group controlId="formName">
+                          <Form.Label>
+                            {data.label}
+                            {data.required ? "(*)" : ""}
+                          </Form.Label>
+                          <Form.Control
+                            type="text"
+                            name={data.key}
+                            required={data.required}
+                            disabled
+                            value={data.value}
+                            onChange={handleInputChangeContent}
+                          />
+                        </Form.Group>
+                      </Col>
+                    </Row>
+                  );
+                } else if (data.key === "numberOfDays") {
+                  return (
+                    <Row className="mt-2" key={generateUUID()}>
+                      <Col>
+                        <Form.Group controlId="formName">
+                          <Form.Label>
+                            {data.label}
+                            {data.required ? "(*)" : ""}
+                          </Form.Label>
+                          <Form.Control
+                            type="number"
+                            name={data.key}
+                            required={data.required}
+                            value={data.value}
+                            onChange={handleInputChangeContent}
+                          />
+                        </Form.Group>
+                      </Col>
+                    </Row>
+                  );
+                } else if (data.key === "countedFromDate") {
+                  const toDate = dataFrom.content.find(
+                    (d) => d.key === "toDate"
+                  );
+                  const maxToDate = toDate
+                    ? toDate.value
+                    : new Date().toISOString().slice(0, 10);
+                  return (
+                    <Row className="mt-2" key={generateUUID()}>
+                      <Col>
+                        <Form.Group controlId="formName">
+                          <Form.Label>
+                            {data.label}
+                            {data.required ? "(*)" : ""}
+                          </Form.Label>
+                          <Form.Control
+                            type="datetime-local"
+                            name={data.key}
+                            required={data.required}
+                            value={data.value}
+                            onChange={handleInputChangeContent}
+                            min={new Date().toISOString().slice(0, 16)}
+                            max={maxToDate}
+                          />
+                        </Form.Group>
+                      </Col>
+                    </Row>
+                  );
+                } else if (data.key === "toDate") {
+                  const countedFromDateField = dataFrom.content.find(
+                    (d) => d.key === "countedFromDate"
+                  );
+                  const minDate = countedFromDateField
+                    ? countedFromDateField.value
+                    : new Date().toISOString().slice(0, 10);
+                  return (
+                    <Row className="mt-2" key={generateUUID()}>
+                      <Col>
+                        <Form.Group controlId="formName">
+                          <Form.Label>
+                            {data.label}
+                            {data.required ? "(*)" : ""}
+                          </Form.Label>
+                          <Form.Control
+                            type="datetime-local"
+                            name={data.key}
+                            required={data.required}
+                            value={data.value}
+                            onChange={handleInputChangeContent}
+                            min={minDate}
+                          />
+                        </Form.Group>
+                      </Col>
+                    </Row>
+                  );
+                } else if (data.key === "requestDate") {
+                  return (
+                    <Row className="mt-2" key={generateUUID()}>
+                      <Col>
+                        <Form.Group controlId="formName">
+                          <Form.Label>
+                            {data.label}
+                            {data.required ? "(*)" : ""}
+                          </Form.Label>
+                          <Form.Control
+                            type="date"
+                            name={data.key}
+                            required={data.required}
+                            value={data.value}
+                            onChange={handleInputChangeContent}
+                            disabled
+                          />
+                        </Form.Group>
+                      </Col>
+                    </Row>
+                  );
+                } else if (data.key === "approver") {
+                  return (
+                    <Row className="mt-2" key={generateUUID()}>
+                      <Col>
+                        <Form.Group controlId="formName">
+                          <Form.Label>
+                            {data.label}
+                            {data.required ? "(*)" : ""}
+                          </Form.Label>
+                          <select
+                            className="form-select"
+                            name={data.key}
+                            required={data.required}
+                            value={data.value}
+                            onChange={handleInputChangeContent}
+                          >
+                            {dataRoomApprover.options.map((userApprove) => (
+                              <option
+                                key={userApprove._id}
+                                value={userApprove._id}
+                              >
+                                {userApprove.name}
+                              </option>
+                            ))}
+                          </select>
+                        </Form.Group>
+                      </Col>
+                    </Row>
+                  );
+                }
+
+                return (
+                  <Row className="mt-2" key={generateUUID()}>
+                    <Col>
+                      <Form.Group controlId="formName">
+                        <Form.Label>
+                          {data.label}
+                          {data.required ? "(*)" : ""}
+                        </Form.Label>
+                        <Form.Control
+                          type="text"
+                          name={data.key}
+                          required={data.required}
+                          value={data.value}
+                          onChange={handleInputChangeContent}
+                        />
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                );
+              })}
 
               <Button className="mt-3" type="submit" variant="primary">
                 Gửi đơn

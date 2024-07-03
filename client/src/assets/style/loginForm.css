@@ -1,18 +1,43 @@
-
+/* 
 .container {
     margin-top: 100px;
     display: flex;
     flex-direction: column;
     align-items: center;
+   
   }
   
   .custom-form-group {
     width: 50%;
-    margin-bottom: 15px; /* Khoảng cách giữa các Form.Group */
+    margin-bottom: 15px; 
   }
   
   .title-form-group {
-    font-size: 24px; /* Đặt kích thước font */
-    font-weight: bold; /* Đặt độ đậm của font */
-  }
+    font-size: 24px; 
+    font-weight: bold; 
+  } */
   
+  .login-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    background-image: linear-gradient(
+      140deg,
+      #eadedb 0%,
+      #bc70a4 50%,
+      #bfd641 75%
+    );
+  
+    
+  }
+  .form-login {
+    width: 400px;
+      height: 250px;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+      padding: 20px;
+      border-radius: 10px;
+      background-color: #fff;
+    }

@@ -61,7 +61,7 @@ const createSingle = async (req, res, next) => {
                 <tr>
                   <td style="border: 1px solid #ddd; padding: 8px;">
                     <p><strong>Người nộp đơn:</strong> ${req.userName} </p>
-                    <p><strong>Ngày nộp:</strong> [Ngày nộp đơn]</p>
+                    <p><strong>Ngày nộp:</strong> ${newSingles.createdAt}</p>
                     <p><strong>Nội dung đơn:</strong></p>
                     <p>[Nội dung đơn]</p>
                   </td>
@@ -70,7 +70,7 @@ const createSingle = async (req, res, next) => {
                   <td style="border: 1px solid #ddd; padding: 8px;">
                     <p>Vui lòng xem xét đơn và phản hồi sớm.</p>
                     <p>Trân trọng,</p>
-                    <p>[Tên của bạn]</p>
+                    <p>${approverRelease.name}</p>
                   </td>
                 </tr>
               </table>`,
@@ -216,9 +216,7 @@ const getSingleReport = async (req, res) => {
       };
     });
     // Đếm số lượng Singles để tính tổng số trang
-    const totalCount = await Singles.countDocuments({
-      ...searchConditions,
-    });
+    const totalCount = await SingleType.countDocuments({});
 
     res.json({
       status: 200,

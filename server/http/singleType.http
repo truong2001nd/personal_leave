@@ -4,18 +4,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTFjZ
 
 
 {
-    "name": "Đơn xin nghỉ việc ",
+    "name": "Đơn xin gia hạn hợp đồng lao động",
     "content":[
-        {
-            "key":"proposedName",
-            "label":"Tên đề xuất",
-            "required": true
-        },
-        {
-            "key":"proposalGroup",
-            "label":"Nhóm đề xuất",
-            "required": true
-        },
         {
             "key":"fullName",
             "label":"Họ Và tên",
@@ -32,13 +22,23 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTFjZ
             "required": true
         },
         {
+            "key":"countedFromDate",
+            "label":"Thời gian gia hạn mong muốn",
+            "required":true
+        },
+        {
             "key":"requestDate",
             "label":"Ngày xin",
             "required": true
         },
         {
             "key":"reason",
-            "label":"Lí do ",
+            "label":"Xin được gia hạn hợp đồng",
+            "required": true
+        },
+        {
+            "key":"EmployeeCommitment",
+            "label":"Cam kết của nhân viên",
             "required": true
         },
         {
