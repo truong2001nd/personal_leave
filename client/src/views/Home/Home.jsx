@@ -190,7 +190,7 @@ const Home = () => {
                 </TableHead>
                 <TableBody>
                   {dataSingle && dataSingle.length > 0 ? (
-                    dataSingle.reverse().map((row, index) => (
+                    [...dataSingle].reverse().map((row, index) => (
                       <React.Fragment key={index}>
                         <TableRow
                           onClick={() => handleToggleRow(row.id)}

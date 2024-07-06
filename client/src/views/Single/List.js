@@ -7,7 +7,6 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { apiGetRoomUserApprove } from "../../service/api/room";
 import config from "../../config";
 import { useNavigate } from "react-router-dom";
-import { generateUUID } from "../../utils/funtions";
 
 function ListSingle(props) {
   const { authState } = useContext(AuthContext);
@@ -248,7 +247,7 @@ function ListSingle(props) {
               {dataFrom.content.map((data, i) => {
                 if (data.key === "fullName") {
                   return (
-                    <Row className="mt-2" key={generateUUID()}>
+                    <Row className="mt-2" key={`${data.key}-${i}`}>
                       <Col>
                         <Form.Group controlId="formName">
                           <Form.Label>
@@ -269,7 +268,7 @@ function ListSingle(props) {
                   );
                 } else if (data.key === "position") {
                   return (
-                    <Row className="mt-2" key={generateUUID()}>
+                    <Row className="mt-2" key={`${data.key}-${i}`}>
                       <Col>
                         <Form.Group controlId="formName">
                           <Form.Label>
@@ -290,7 +289,7 @@ function ListSingle(props) {
                   );
                 } else if (data.key === "room") {
                   return (
-                    <Row className="mt-2" key={generateUUID()}>
+                    <Row className="mt-2" key={`${data.key}-${i}`}>
                       <Col>
                         <Form.Group controlId="formName">
                           <Form.Label>
@@ -311,7 +310,7 @@ function ListSingle(props) {
                   );
                 } else if (data.key === "numberOfDays") {
                   return (
-                    <Row className="mt-2" key={generateUUID()}>
+                    <Row className="mt-2" key={`${data.key}-${i}`}>
                       <Col>
                         <Form.Group controlId="formName">
                           <Form.Label>
@@ -337,7 +336,7 @@ function ListSingle(props) {
                     ? toDate.value
                     : new Date().toISOString().slice(0, 10);
                   return (
-                    <Row className="mt-2" key={generateUUID()}>
+                    <Row className="mt-2" key={`${data.key}-${i}`}>
                       <Col>
                         <Form.Group controlId="formName">
                           <Form.Label>
@@ -365,7 +364,7 @@ function ListSingle(props) {
                     ? countedFromDateField.value
                     : new Date().toISOString().slice(0, 10);
                   return (
-                    <Row className="mt-2" key={generateUUID()}>
+                    <Row className="mt-2" key={`${data.key}-${i}`}>
                       <Col>
                         <Form.Group controlId="formName">
                           <Form.Label>
@@ -386,7 +385,7 @@ function ListSingle(props) {
                   );
                 } else if (data.key === "requestDate") {
                   return (
-                    <Row className="mt-2" key={generateUUID()}>
+                    <Row className="mt-2" key={`${data.key}-${i}`}>
                       <Col>
                         <Form.Group controlId="formName">
                           <Form.Label>
@@ -407,7 +406,7 @@ function ListSingle(props) {
                   );
                 } else if (data.key === "approver") {
                   return (
-                    <Row className="mt-2" key={generateUUID()}>
+                    <Row className="mt-2" key={`${data.key}-${i}`}>
                       <Col>
                         <Form.Group controlId="formName">
                           <Form.Label>
@@ -437,7 +436,7 @@ function ListSingle(props) {
                 }
 
                 return (
-                  <Row className="mt-2" key={generateUUID()}>
+                  <Row className="mt-2">
                     <Col>
                       <Form.Group controlId="formName">
                         <Form.Label>

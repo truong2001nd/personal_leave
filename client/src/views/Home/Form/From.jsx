@@ -1,7 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Modal, Button, Row, Col, Form } from "react-bootstrap";
+import { AuthContext } from "../../../contexts/AuthContext";
 
 const FromCustom = ({ open, onClose, handleSubmit, isEdit, dataRow, data }) => {
+  const { authState } = useContext(AuthContext);
+  const { user } = authState;
+
   const handleClose = () => {
     onClose();
   };
@@ -95,12 +99,16 @@ const FromCustom = ({ open, onClose, handleSubmit, isEdit, dataRow, data }) => {
         </form>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="success" onClick={(e) => onSubmit(e, "approve")}>
-          chấp thuận
-        </Button>
-        <Button variant="danger" onClick={(e) => onSubmit(e, "reject")}>
-          Từ chối
-        </Button>
+        {user.positions.status === 1 && (
+          <>
+            <Button variant="success" onClick={(e) => onSubmit(e, "approve")}>
+              chấp thuận
+            </Button>
+            <Button variant="danger" onClick={(e) => onSubmit(e, "reject")}>
+              Từ chối
+            </Button>
+          </>
+        )}
         <Button variant="secondary" onClick={handleClose}>
           Thoát
         </Button>
