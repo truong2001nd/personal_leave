@@ -10,7 +10,6 @@ const Room = require("../models/Rooms.js");
 const Position = require("../models/Positions.js");
 
 const sendMail = require("../helper/sendMail.js");
-const { request } = require("http");
 
 const loadUser = async (req, res) => {
   try {
@@ -70,7 +69,9 @@ const register = async (req, res, next) => {
       return res.json({ status: 400, message: "Không tồn tại quyền" });
     }
 
-    const positionRelease = await Position.findOne({ _id: positions });
+    const positionRelease = await Position.findOne({ _id: positions }).populate(
+      { path: "room" }
+    );
     if (!positionRelease) {
       return res.json({ status: 400, message: "Không tồn tại chức vụ" });
     }
@@ -84,6 +85,7 @@ const register = async (req, res, next) => {
       password: hashedPassword,
       permissions: permissionRelease,
       positions: positionRelease,
+      room: positionRelease.room._id,
       sex: sex || null,
       phone: phone || null,
       birthday: birthday || null,
@@ -96,10 +98,25 @@ const register = async (req, res, next) => {
 
     await sendMail({
       email: email,
-      subject: "Thông báo đăng ký tài khoản thành công",
-      html: `<h1> Mật khẩu của ${name}<h1>
-            <li>Mật Khẩu : ${password}</li>  
-      `,
+      subject: `"Thông báo cấp tài khoản"`,
+      html: `<table cellpadding="0" cellspacing="0" style="border-collapse: collapse; border: none;">
+                <tr>
+                  <td style="border: 1px solid #ddd; padding: 8px;">
+                    <h2 style="margin: 0;">Thông tin tài khoản</h2>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="border: 1px solid #ddd; padding: 8px;">
+                    <p><strong>Tài khoản:</strong> ${email} </p>
+                    <p><strong>Mật khẩu:</strong> ${password} </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="border: 1px solid #ddd; padding: 8px;">
+                    <p>Trân trọng,</p>
+                  </td>
+                </tr>
+              </table>`,
     });
     res.json({
       status: 200,

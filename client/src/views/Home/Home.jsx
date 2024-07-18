@@ -228,7 +228,7 @@ const Home = () => {
                               </span>
                             )}
                           </TableCell>
-                          {authState.user.positions.status === 1 &&
+                          {authState.user.positions.status === 0 &&
                           row.status === 0 ? (
                             <TableCell className="text-center">
                               <Update

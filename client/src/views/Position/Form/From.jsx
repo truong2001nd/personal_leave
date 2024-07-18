@@ -97,6 +97,7 @@ const FromCustom = ({ open, onClose, handleSubmit, isEdit, dataRow, data }) => {
               name="room"
               onChange={(e) => handleSetFromData(e)}
             >
+              <option value="">chọn phòng ban </option>
               {listRoom.map((department, index) => (
                 <option key={index} value={department._id}>
                   {department.name}
@@ -112,7 +113,7 @@ const FromCustom = ({ open, onClose, handleSubmit, isEdit, dataRow, data }) => {
               name="status"
               onChange={(e) => handleSetFromData(e)}
             >
-              <option value="">Chọn giới tính</option>
+              <option value="">chọn trạng thái </option>
               <option value={0}>0</option>
               <option value={1}>1</option>
             </select>

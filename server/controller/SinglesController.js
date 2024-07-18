@@ -12,7 +12,7 @@ const createSingle = async (req, res, next) => {
       message: "Tài khoản không có quyền truy cập",
     });
   }
-  const { name, content, singlesStyes, approver } = req.body;
+  const { name, content, singlesStyes, approver, note } = req.body;
   if (!name || !content || !singlesStyes || !approver) {
     return res.json({ status: 422, message: "Sai dữ liệu đầu vào" });
   }
@@ -31,6 +31,13 @@ const createSingle = async (req, res, next) => {
         message: "Mã người phê duyệt không tồn tại",
       });
     }
+    const user = await User.findById(req.userId).populate({
+      path: "positions",
+      populate: {
+        path: "room",
+      },
+    });
+    console.log(user);
 
     const newSingles = new Singles({
       name,
@@ -39,6 +46,7 @@ const createSingle = async (req, res, next) => {
       sender: req.userId,
       approver,
       status: 0,
+      note: "",
     });
     await newSingles.save();
     if (!(await newSingles.save())) {
@@ -61,9 +69,9 @@ const createSingle = async (req, res, next) => {
                 <tr>
                   <td style="border: 1px solid #ddd; padding: 8px;">
                     <p><strong>Người nộp đơn:</strong> ${req.userName} </p>
+                    <p><strong>phòng ban:</strong> ${user.positions.room.name} </p>
                     <p><strong>Ngày nộp:</strong> ${newSingles.createdAt}</p>
-                    <p><strong>Nội dung đơn:</strong></p>
-                    <p>[Nội dung đơn]</p>
+                    <p><strong>Loại đơn: ${singlesStyesRelease.name}</strong></p>
                   </td>
                 </tr>
                 <tr>
@@ -144,7 +152,7 @@ const getAllSingle = async (req, res) => {
         select: "name _id",
       })
       .select(
-        "_id name content status  sender approver createdAt updatedAt __v"
+        "_id name content status  sender approver createdAt updatedAt note __v"
       )
       .skip((page - 1) * size) // Bỏ qua các mục trước đó
       .limit(size); // Giới hạn số lượng mục trả về trên mỗi trang
@@ -318,7 +326,7 @@ const approvalSingle = async (req, res) => {
       message: "Tài khoản không có quyền chỉnh sửa",
     });
   }
-  const { status } = req.body;
+  const { status, note } = req.body;
   if (status !== 1 && status !== 2) {
     return res.json({
       status: 422,
@@ -342,6 +350,7 @@ const approvalSingle = async (req, res) => {
     if (singleId.status === 0) {
       let approvalSingle = {
         status,
+        note,
       };
       const newSingleId = await Singles.findOneAndUpdate(
         { _id: req.params.id },

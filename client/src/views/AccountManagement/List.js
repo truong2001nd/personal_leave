@@ -99,9 +99,9 @@ function ListAccountManagement(props) {
   // call api
 
   // Danh sách tài khoản
-  const handleGetList = async (url) => {
+  const handleGetList = async () => {
     try {
-      const result = await apiGetAccount(url);
+      const result = await apiGetAccount(request);
       if (result.data.status === 200) {
         setListAccount(result.data.data);
         setTotalRecord(result.data.totalCount);
@@ -180,7 +180,7 @@ function ListAccountManagement(props) {
   //event handler
 
   useEffect(() => {
-    handleGetList(request);
+    handleGetList();
   }, [request]);
 
   useEffect(() => {

@@ -35,20 +35,20 @@ const Header = () => {
             <MdEventAvailable />
             <span>Thống kê</span>
           </NavLink>
-          {user?.permissions?.room?.some((role) => role === "read") &&
+          {user?.permissions?.room?.some((role) => role === "create") &&
             user?.positions?.status === 1 && (
               <NavLink to={config.urls.room} className="menu-item">
                 <SiGoogleclassroom /> <span>Phòng ban</span>
               </NavLink>
             )}
-          {user?.permissions?.position?.some((role) => role === "read") &&
+          {user?.permissions?.position?.some((role) => role === "create") &&
             user?.positions?.status === 1 && (
               <NavLink to={config.urls.position} className="menu-item">
                 <SiJetpackcompose />
                 <span>chức vụ </span>
               </NavLink>
             )}
-          {user?.permissions?.permission?.some((role) => role === "read") &&
+          {user?.permissions?.permission?.some((role) => role === "create") &&
             user?.positions?.status === 1 && (
               <NavLink to={config.urls.permission} className="menu-item">
                 <PiDroneFill />
@@ -56,7 +56,7 @@ const Header = () => {
               </NavLink>
             )}
 
-          {user?.permissions?.user?.some((role) => role === "read") &&
+          {user?.permissions?.user?.some((role) => role === "create") &&
             user?.positions?.status === 1 && (
               <NavLink to={config.urls.accountManagement} className="menu-item">
                 <GoPasskeyFill />

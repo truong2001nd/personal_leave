@@ -212,7 +212,7 @@ const FromCustom = ({ open, onClose, handleSubmit, isEdit, dataRow }) => {
               </th>
             </tr>
             <tr>
-              <th className="text-center">Loại đơn</th>
+              <th className="text-center">Phê duyệt</th>
               <th className="text-center">
                 {options.map((options, index) => (
                   <div key={index} className="form-check form-check-inline ">

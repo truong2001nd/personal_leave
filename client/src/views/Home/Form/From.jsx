@@ -19,6 +19,7 @@ const FromCustom = ({ open, onClose, handleSubmit, isEdit, dataRow, data }) => {
       handleClose();
     }
   };
+
   return (
     <Modal size="lg" show={open} onHide={handleClose}>
       <Modal.Header closeButton>
@@ -90,8 +91,21 @@ const FromCustom = ({ open, onClose, handleSubmit, isEdit, dataRow, data }) => {
                 <Form.Control
                   type="text"
                   name="reasonRorRefusal"
-                  value={reasonForRefusal}
+                  value={
+                    user.positions.status === 0
+                      ? dataRow.note
+                      : dataRow.status === 0
+                      ? reasonForRefusal
+                      : dataRow.note
+                  }
                   onChange={(e) => setReasonForRefusal(e.target.value)}
+                  disabled={
+                    user.positions.status === 0
+                      ? true
+                      : dataRow.status === 0
+                      ? false
+                      : true
+                  }
                 />
               </Form.Group>
             </Col>
@@ -99,7 +113,7 @@ const FromCustom = ({ open, onClose, handleSubmit, isEdit, dataRow, data }) => {
         </form>
       </Modal.Body>
       <Modal.Footer>
-        {user.positions.status === 1 && (
+        {user.positions.status === 1 && dataRow.status === 0 && (
           <>
             <Button variant="success" onClick={(e) => onSubmit(e, "approve")}>
               chấp thuận

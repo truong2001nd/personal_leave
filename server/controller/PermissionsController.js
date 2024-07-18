@@ -105,12 +105,12 @@ const getAllPermission = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1; // Trang hiện tại, mặc định là trang 1
     const size = parseInt(req.query.size) || 10; // Số lượng mục trên mỗi trang, mặc định là 10
-    const search = req.query.search || ""; // Từ khóa tìm kiếm, mặc định là chuỗi rỗng
+    const keySearch = req.query.keySearch || ""; // Từ khóa tìm kiếm, mặc định là chuỗi rỗng
     // Xây dựng các điều kiện tìm kiếm
     const searchConditions = {};
-    if (search) {
+    if (keySearch) {
       // Nếu có từ khóa tìm kiếm, thêm điều kiện tìm kiếm
-      searchConditions.name = { $regex: new RegExp(search, "i") }; // Tìm kiếm tên permission không phân biệt chữ hoa, chữ thường
+      searchConditions.name = { $regex: new RegExp(keySearch, "i") }; // Tìm kiếm tên permission không phân biệt chữ hoa, chữ thường
     }
 
     // Tìm kiếm và phân trang
