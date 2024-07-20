@@ -291,19 +291,16 @@ const getAllUsers = async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1; // Trang hiện tại, mặc định là trang 1
     const size = parseInt(req.query.size) || 5; // Số lượng mục trên mỗi trang, mặc định là 5
-    const keySearch = req.query.keySearch || ""; // Từ khóa tìm kiếm, mặc định là chuỗi rỗng
+    const keySearch = req.query.keySearch || "";
     const positions = req.query.positions || "";
     const permissions = req.query.permission || "";
-    const room = req.query.room || ""; // Từ khóa tìm kiếm, mặc định là chuỗi rỗng
+
     const searchConditions = {};
     if (keySearch) {
       // Nếu có từ khóa tìm kiếm, thêm điều kiện tìm kiếm
       searchConditions.name = { $regex: new RegExp(keySearch, "i") }; // Tìm kiếm tên permission không phân biệt chữ hoa, chữ thường
     }
 
-    if (room) {
-      searchConditions.room = room;
-    }
     if (positions) {
       searchConditions.positions = positions;
     }

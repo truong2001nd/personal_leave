@@ -15,7 +15,6 @@ import Select from "react-select";
 import { toast } from "react-toastify";
 import Create from "./Form/Create";
 import Update from "./Form/Update";
-import { apiGetRoom } from "../../service/api/room";
 import { apiGetAccount } from "../../service/api/account";
 import { apiGetPosition } from "../../service/api/position";
 import { apiGetPermission } from "../../service/api/listPermissions";
@@ -42,13 +41,11 @@ function ListAccountManagement(props) {
     keySearch: "",
     page: 1,
     size: 10,
-    room: "",
     positions: "",
     permissions: "",
   });
 
   const [listAccount, setListAccount] = useState([]);
-  const [listRoom, setListRoom] = useState([]);
   const [listPositions, setListPositions] = useState([]);
   const [listPermission, setListPermission] = useState([]);
   // configure data
@@ -131,23 +128,7 @@ function ListAccountManagement(props) {
       toast.warning("Hệ thống đang bảo trì!");
     }
   };
-  const handleGetListRoom = async () => {
-    try {
-      const result = await apiGetRoom({
-        keySearch: "",
-        page: 1,
-        size: 100,
-      });
-      if (result.data.status === 200) {
-        setListRoom(result.data.data);
-      } else {
-        toast.error(result.message);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.warning("Hệ thống đang bảo trì!");
-    }
-  };
+
   const handleGetPermission = async () => {
     try {
       const result = await apiGetPermission({
@@ -184,10 +165,10 @@ function ListAccountManagement(props) {
   }, [request]);
 
   useEffect(() => {
-    handleGetListRoom();
     handleGetPosition();
     handleGetPermission();
   }, []);
+
   return (
     <div className="wrapper-screen-list">
       <div className="top-content">
@@ -242,28 +223,6 @@ function ListAccountManagement(props) {
             <label className="font-weight-bold">Thông tin chung</label>
 
             <select
-              className="form-select"
-              value={request.room}
-              name="room"
-              onChange={(e) => {
-                setRequest((prev) => {
-                  return {
-                    ...prev,
-                    room: e.target.value,
-                    page: 1,
-                  };
-                });
-              }}
-            >
-              <option value="">Chọn phòng ban</option>
-              {listRoom &&
-                listRoom.map((department, index) => (
-                  <option key={index} value={department._id}>
-                    {department.name}
-                  </option>
-                ))}
-            </select>
-            <select
               className="form-select mt-2"
               value={request.positions}
               name="positions"
@@ -277,7 +236,7 @@ function ListAccountManagement(props) {
                 });
               }}
             >
-              <option value="">Chọn chức vụ</option>
+              <option value="">Chọn chức vụ theo phòng ban</option>
               {listPositions &&
                 listPositions.map((department, index) => (
                   <option key={index} value={department._id}>

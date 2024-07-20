@@ -62,6 +62,7 @@ const Account = () => {
 
         handleClose(setShowProfile);
         toast.success(res.data.message);
+        window.location.reload();
       } else {
         toast.error(res.data.message);
       }
