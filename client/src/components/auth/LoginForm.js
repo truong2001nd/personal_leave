@@ -33,36 +33,6 @@ const LoginForm = () => {
     }
   };
   return (
-    // <Form className="container" onSubmit={login}>
-    //   <Form.Group className="title-form-group">
-    //     <Form.Label>Đăng nhập </Form.Label>
-    //   </Form.Group>
-    //   <Form.Group className="custom-form-group">
-    //     <Form.Label>Emali: </Form.Label>
-    //     <Form.Control
-    //       type="text"
-    //       placeholder="email"
-    //       name="email"
-    //       required
-    //       value={email}
-    //       onChange={onChangeLoginForm}
-    //     />
-    //   </Form.Group>
-    //   <Form.Group className="custom-form-group">
-    //     <Form.Label>Mật khẩu: </Form.Label>
-    //     <Form.Control
-    //       type="password"
-    //       placeholder="Password"
-    //       name="password"
-    //       required
-    //       value={password}
-    //       onChange={onChangeLoginForm}
-    //     />
-    //   </Form.Group>
-    //   <Button variant="success" className="d-block mx-auto" type="submit">
-    //     Login
-    //   </Button>
-    // </Form>
     <div className="login-container">
       <form className="form-login" onSubmit={login}>
         <div className="form-group">

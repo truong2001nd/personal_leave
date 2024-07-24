@@ -146,7 +146,7 @@ const login = async (req, res, next) => {
       return res.json({ status: 400, message: "Không tồn tại tài khoản" });
     }
 
-    // ma hoa mk
+    // kiểm tra mật khẩu có trùng khớp
     const passwordValid = await argon2.verify(userRelease.password, password);
     if (!passwordValid)
       return res.json({ status: 400, message: "Sai tài khoản hoặc mật khẩu" });

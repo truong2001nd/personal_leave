@@ -60,10 +60,9 @@ function ListSingle(props) {
       toast.warning("Hệ thống đang bảo trì!");
     }
   };
-  const handleGetList = async (url) => {
-    console.log("vo day");
+  const handleGetList = async () => {
     try {
-      const result = await apiGetSingleType(url);
+      const result = await apiGetSingleType(request);
       if (result.data.status === 200) {
         const newContent = JSON.parse(result.data.data[0].content).map(
           (content) => {
@@ -179,7 +178,7 @@ function ListSingle(props) {
   //event handler
 
   useEffect(() => {
-    handleGetList(request);
+    handleGetList();
   }, [request]);
   useEffect(() => {
     handleGetListSinglesStyes();

@@ -27,20 +27,19 @@ const Header = () => {
           <NavLink to={config.urls.home} className="menu-item">
             <FaHome /> <span>Trang chủ</span>
           </NavLink>
-          {user?.permissions?.room?.some((role) => role === "create") &&
-            user?.positions?.status === 1 && (
-              <NavLink to={config.urls.room} className="menu-item">
-                <SiGoogleclassroom /> <span>Phòng ban</span>
-              </NavLink>
-            )}
-          <NavLink to={config.urls.createSingle} className="menu-item">
-            <GrAddCircle />
-            <span>Tạo đơn</span>
-          </NavLink>
-          <NavLink to={config.urls.statistical} className="menu-item">
-            <MdEventAvailable />
-            <span>Thống kê</span>
-          </NavLink>
+          {user?.permissions?.single?.some((role) => role === "create") && (
+            <NavLink to={config.urls.createSingle} className="menu-item">
+              <GrAddCircle />
+              <span>Tạo đơn</span>
+            </NavLink>
+          )}
+          {user?.permissions?.single?.some((role) => role === "create") && (
+            <NavLink to={config.urls.statistical} className="menu-item">
+              <MdEventAvailable />
+              <span>Thống kê</span>
+            </NavLink>
+          )}
+
           {user?.permissions?.room?.some((role) => role === "create") &&
             user?.positions?.status === 1 && (
               <NavLink to={config.urls.room} className="menu-item">
