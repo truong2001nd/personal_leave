@@ -19,6 +19,12 @@ const FromCustom = ({ open, onClose, handleSubmit, isEdit, dataRow, data }) => {
       handleClose();
     }
   };
+  const onSubmitDelete = async () => {
+    const res = await handleSubmit(dataRow);
+    if (res.success) {
+      handleClose();
+    }
+  };
 
   return (
     <Modal size="lg" show={open} onHide={handleClose}>
@@ -120,6 +126,13 @@ const FromCustom = ({ open, onClose, handleSubmit, isEdit, dataRow, data }) => {
             </Button>
             <Button variant="danger" onClick={(e) => onSubmit(e, "reject")}>
               Từ chối
+            </Button>
+          </>
+        )}
+        {user.positions.status === 0 && dataRow.status === 0 && (
+          <>
+            <Button variant="danger" onClick={onSubmitDelete}>
+              xóa
             </Button>
           </>
         )}

@@ -12,9 +12,10 @@ import {
   TableRow,
 } from "@mui/material";
 import { Col, Form, Row, Table } from "react-bootstrap";
-import Update from "../Home/Form/Update";
+
 import Read from "../Home/Form/Read";
 import { dateFormatter } from "../../utils/dateFormatter";
+import Delete from "./Form/Delete";
 
 const Home = () => {
   const { authState } = useContext(AuthContext);
@@ -27,6 +28,7 @@ const Home = () => {
     size: 10,
     singlesStyes: "",
     date: "",
+    status: "",
   });
   const [expandedRow, setExpandedRow] = useState(null);
   const handleToggleRow = (rowId) => {
@@ -67,11 +69,7 @@ const Home = () => {
   // Danh sách loai don
   const handleGetList = async () => {
     try {
-      const result = await apiGetSingleType({
-        keySearch: "",
-        page: 1,
-        size: 100,
-      });
+      const result = await apiGetSingleType(request);
       if (result.data.status === 200) {
         setDataFrom(result.data.data);
       } else {
@@ -83,9 +81,9 @@ const Home = () => {
     }
   };
   // danh sách đơn đã gửi
-  const handleGetlistSingle = async (url) => {
+  const handleGetlistSingle = async () => {
     try {
-      const result = await apiGetSingle(url);
+      const result = await apiGetSingle(request);
       setSingle(result.data.data);
       setTotalRecord(result.data.totalCount);
     } catch (error) {
@@ -97,7 +95,7 @@ const Home = () => {
     handleGetList();
   }, [request]);
   useEffect(() => {
-    handleGetlistSingle(request);
+    handleGetlistSingle();
   }, [request]);
   //
   return (
@@ -117,6 +115,26 @@ const Home = () => {
       <div className="col-md-3">
         <div className="filter-options">
           <label className="font-weight-bold">Tìm kiếm theo :</label>
+          <select
+            className="form-select"
+            value={request.status}
+            name="status"
+            onChange={(e) =>
+              setRequest((prev) => {
+                return {
+                  ...prev,
+                  status: e.target.value,
+                  page: 1,
+                };
+              })
+            }
+          >
+            <option value="">Trạng thái đơn</option>
+
+            <option value={0}>Chưa phê duyệt</option>
+            <option value={1}>Đã chấp thuận</option>
+            <option value={2}>Từ chối</option>
+          </select>
           <select
             className="form-select"
             value={request.singlesStyes}
@@ -231,8 +249,8 @@ const Home = () => {
                           {authState.user.positions.status === 0 &&
                           row.status === 0 ? (
                             <TableCell className="text-center">
-                              <Update
-                                handleGetList={handleGetList}
+                              <Delete
+                                handleGetlistSingle={handleGetlistSingle}
                                 dataRow={row}
                               />
                             </TableCell>

@@ -343,12 +343,12 @@ function ListSingle(props) {
                             {data.required ? "(*)" : ""}
                           </Form.Label>
                           <Form.Control
-                            type="datetime-local"
+                            type="date"
                             name={data.key}
                             required={data.required}
                             value={data.value}
                             onChange={handleInputChangeContent}
-                            min={new Date().toISOString().slice(0, 16)}
+                            min={new Date().toISOString().slice(0, 10)}
                             max={maxToDate}
                           />
                         </Form.Group>
@@ -371,7 +371,7 @@ function ListSingle(props) {
                             {data.required ? "(*)" : ""}
                           </Form.Label>
                           <Form.Control
-                            type="datetime-local"
+                            type="date"
                             name={data.key}
                             required={data.required}
                             value={data.value}

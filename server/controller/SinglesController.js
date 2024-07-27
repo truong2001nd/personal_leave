@@ -106,6 +106,7 @@ const getAllSingle = async (req, res) => {
     const search = req.query.search || ""; // Từ khóa tìm kiếm, mặc định là chuỗi rỗng
     const singlesStyes = req.query.singlesStyes || "";
     const date = req.query.date || "";
+    const status = req.query.status || "";
     const searchConditions = {};
     if (search) {
       // Nếu có từ khóa tìm kiếm, thêm điều kiện tìm kiếm
@@ -113,6 +114,9 @@ const getAllSingle = async (req, res) => {
     }
     if (singlesStyes) {
       searchConditions.singlesStyes = singlesStyes;
+    }
+    if (status) {
+      searchConditions.status = status;
     }
     if (date) {
       // Nếu có ngày tháng, tính toán khoảng thời gian tìm kiếm

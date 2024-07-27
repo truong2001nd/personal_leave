@@ -40,7 +40,7 @@ const Header = () => {
             </NavLink>
           )}
 
-          {user?.permissions?.room?.some((role) => role === "create") &&
+          {user?.permissions?.room?.some((role) => role === "read") &&
             user?.positions?.status === 1 && (
               <NavLink to={config.urls.room} className="menu-item">
                 <SiGoogleclassroom /> <span>Phòng ban</span>
@@ -61,7 +61,7 @@ const Header = () => {
               </NavLink>
             )}
 
-          {user?.permissions?.user?.some((role) => role === "create") &&
+          {user?.permissions?.user?.some((role) => role === "read") &&
             user?.positions?.status === 1 && (
               <NavLink to={config.urls.accountManagement} className="menu-item">
                 <GoPasskeyFill />

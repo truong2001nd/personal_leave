@@ -32,6 +32,12 @@ const apiPostSingleType = async (data) => {
     data: data,
   });
 };
+const apiDeleteSingle = async (id) => {
+  return axios({
+    method: "delete",
+    url: `${apiUrl}/single/delete/${id}`,
+  });
+};
 const apiDeleteRoom = async (id) => {
   return axios({
     method: "delete",
@@ -53,4 +59,5 @@ export {
   apiDeleteRoom,
   apiUpdateApproval,
   apiGetSingleReport,
+  apiDeleteSingle,
 };
