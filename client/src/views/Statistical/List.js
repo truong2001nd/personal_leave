@@ -24,6 +24,29 @@ import { apiGetSingleReport } from "../../service/api/single";
 import { apiGetRoomUser } from "../../service/api/room";
 import { AuthContext } from "../../contexts/AuthContext";
 
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Bar } from "react-chartjs-2";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
+import InsertChartIcon from "@mui/icons-material/InsertChart";
+
 const customSelect = {
   control: (base) => ({
     ...base,
@@ -141,6 +164,88 @@ function ListStatistical(props) {
 
   //event handler
 
+  // tab
+
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+
+    return (
+      <>
+        <div
+          role="tabpanel"
+          hidden={value !== index}
+          id={`simple-tabpanel-${index}`}
+          aria-labelledby={`simple-tab-${index}`}
+          {...other}
+        >
+          {value === index && (
+            <Box sx={{ p: 2 }}>
+              <span>{children}</span>
+            </Box>
+          )}
+        </div>
+      </>
+    );
+  }
+
+  function a11yProps(index) {
+    return {
+      id: `simple-tab-${index}`,
+      "aria-controls": `simple-tabpanel-${index}`,
+    };
+  }
+
+  // tab
+
+  // biểu đồ
+
+  const [revenue, setRevenue] = useState([]);
+  const [quantity, setQuantity] = useState([]);
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top",
+        display: false,
+      },
+      title: {
+        display: true,
+        text: "Thống kê",
+      },
+    },
+  };
+
+  const labels = ["loại 1", "loai 2", "loai 3"];
+
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: "Dataset 1",
+        data: labels.map(() => {
+          return [Utils.rand(-100, 100), Utils.rand(-100, 100)];
+        }),
+        backgroundColor: Utils.CHART_COLORS.red,
+      },
+      {
+        label: "Dataset 2",
+        data: labels.map(() => {
+          return [Utils.rand(-100, 100), Utils.rand(-100, 100)];
+        }),
+        backgroundColor: Utils.CHART_COLORS.blue,
+      },
+    ],
+  };
+
+  // biểu đồ
+
   useEffect(() => {
     handleGetList(request);
   }, [request]);
@@ -215,143 +320,166 @@ function ListStatistical(props) {
           } `}
         >
           <CardContent className="card-content mb-5" sx={{ boxShadow: 0 }}>
-            <TableContainer className="table-container">
-              <Table>
-                <TableHead>
-                  <TableRow className="custom-table-head">
-                    <TableCell className="text-center">Tên đơn</TableCell>
-                    <TableCell className="text-center">
-                      Đơn đang chờ phê duyệt
-                    </TableCell>
-                    <TableCell className="text-center">
-                      Đơn Đã được chấp thuận
-                    </TableCell>
-                    <TableCell className="text-center">
-                      Đơn bị từ chối
-                    </TableCell>
-                    <TableCell className="text-center">
-                      Tổng số theo loại đơn
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {rowsData && rowsData.length > 0 ? (
-                    rowsData.map((row, index) => (
-                      <React.Fragment key={index}>
-                        <TableRow
-                          onClick={() => handleToggleRow(row.id)}
-                          style={{ background: "white" }}
-                        >
-                          <TableCell className="text-center">
-                            {row?.name}
-                          </TableCell>
-
-                          <TableCell className="text-center">
-                            {row?.countPending}
-                          </TableCell>
-
-                          <TableCell className="text-center">
-                            {row?.countApproval}
-                          </TableCell>
-                          <TableCell className="text-center">
-                            {row?.countRefuse}
-                          </TableCell>
-                          <TableCell className="text-center">
-                            {row?.countRefuse +
-                              row?.countApproval +
-                              row?.countPending}
-                          </TableCell>
-                        </TableRow>
-                      </React.Fragment>
-                    ))
-                  ) : (
-                    <TableRow
-                      key={1}
-                      sx={{
-                        "&:last-child td, &:last-child th": {
-                          border: 0,
-                        },
-                      }}
-                    >
-                      <TableCell align="center" colSpan={7}>
-                        <div>
-                          <span>Không có dữ liệu</span>
-                        </div>
+            <Box
+              sx={{
+                display: "flex",
+                borderBottom: 1,
+                alignItems: "center",
+                justifyContent: "flex-end",
+                borderColor: "divider",
+              }}
+            >
+              <h5 className="mr-4">Xem theo</h5>
+              <Tabs
+                value={value}
+                onChange={handleChange}
+                aria-label="basic tabs example"
+              >
+                <Tab icon={<FormatListNumberedIcon />} {...a11yProps(0)} />
+                <Tab icon={<InsertChartIcon />} {...a11yProps(1)} />
+              </Tabs>
+            </Box>
+            <TabPanel value={value} index={0}>
+              <TableContainer className="table-container">
+                <Table>
+                  <TableHead>
+                    <TableRow className="custom-table-head">
+                      <TableCell className="text-center">Tên đơn</TableCell>
+                      <TableCell className="text-center">
+                        Đơn đang chờ phê duyệt
+                      </TableCell>
+                      <TableCell className="text-center">
+                        Đơn Đã được chấp thuận
+                      </TableCell>
+                      <TableCell className="text-center">
+                        Đơn bị từ chối
+                      </TableCell>
+                      <TableCell className="text-center">
+                        Tổng số theo loại đơn
                       </TableCell>
                     </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
+                  </TableHead>
+                  <TableBody>
+                    {rowsData && rowsData.length > 0 ? (
+                      rowsData.map((row, index) => (
+                        <React.Fragment key={index}>
+                          <TableRow
+                            onClick={() => handleToggleRow(row.id)}
+                            style={{ background: "white" }}
+                          >
+                            <TableCell className="text-center">
+                              {row?.name}
+                            </TableCell>
 
-            <div className="d-flex justify-content-between mt-2">
-              <div>
-                <div className="col d-flex align-self-center">
-                  <span
-                    style={{
-                      marginTop: "1.5rem",
-                      display: rowsData.length > 0 ? "" : "none",
-                    }}
-                  >{`Hiển thị từ ${initIdPage} đến ${lastIdPage} trong tổng số ${totalRecord} kết quả`}</span>
-                </div>
-              </div>
-              <div>
-                <div
-                  className="col d-flex flex-row align-items-center align-items-center"
-                  style={{
-                    flexShrink: 0,
-                    flexGrow: 1,
-                    justifyContent: "center",
-                    marginTop: "18px",
-                  }}
-                >
-                  <span
-                    className="px-2"
-                    style={{
-                      display: rowsData.length > 0 ? "" : "none",
-                    }}
-                  >
-                    Hiển thị
-                  </span>
-                  <div
-                    style={{
-                      width: "90px",
-                      display: rowsData.length > 0 ? "" : "none",
-                    }}
-                  >
-                    <Select
-                      menuPlacement="auto"
-                      menuPosition="fixed"
-                      options={listResultValues}
-                      styles={customSelect}
-                      onChange={handleChangeResultValue}
-                      placeholder="10"
-                    />
-                  </div>
-                  <span
-                    className="px-2"
-                    style={{
-                      display: rowsData.length > 0 ? "" : "none",
-                    }}
-                  >
-                    kết quả
-                  </span>
-                </div>
-              </div>
-              <div>
-                <Pagination
+                            <TableCell className="text-center">
+                              {row?.countPending}
+                            </TableCell>
+
+                            <TableCell className="text-center">
+                              {row?.countApproval}
+                            </TableCell>
+                            <TableCell className="text-center">
+                              {row?.countRefuse}
+                            </TableCell>
+                            <TableCell className="text-center">
+                              {row?.countRefuse +
+                                row?.countApproval +
+                                row?.countPending}
+                            </TableCell>
+                          </TableRow>
+                        </React.Fragment>
+                      ))
+                    ) : (
+                      <TableRow
+                        key={1}
+                        sx={{
+                          "&:last-child td, &:last-child th": {
+                            border: 0,
+                          },
+                        }}
+                      >
+                        <TableCell align="center" colSpan={7}>
+                          <div>
+                            <span>Không có dữ liệu</span>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </TabPanel>
+            <TabPanel value={value} index={1}>
+              <Bar options={options} data={data} />
+            </TabPanel>
+          </CardContent>
+          <div className="d-flex justify-content-between mt-2">
+            <div>
+              <div className="col d-flex align-self-center">
+                <span
                   style={{
                     marginTop: "1.5rem",
-                    float: "right",
                     display: rowsData.length > 0 ? "" : "none",
                   }}
-                  page={request.page}
-                  count={Math.ceil(totalRecord / request.size)}
-                  onChange={onPageClick}
-                />
+                >{`Hiển thị từ ${initIdPage} đến ${lastIdPage} trong tổng số ${totalRecord} kết quả`}</span>
               </div>
             </div>
-          </CardContent>
+            <div>
+              <div
+                className="col d-flex flex-row align-items-center align-items-center"
+                style={{
+                  flexShrink: 0,
+                  flexGrow: 1,
+                  justifyContent: "center",
+                  marginTop: "18px",
+                }}
+              >
+                <span
+                  className="px-2"
+                  style={{
+                    display: rowsData.length > 0 ? "" : "none",
+                  }}
+                >
+                  Hiển thị
+                </span>
+                <div
+                  style={{
+                    width: "90px",
+                    display: rowsData.length > 0 ? "" : "none",
+                  }}
+                >
+                  <Select
+                    menuPlacement="auto"
+                    menuPosition="fixed"
+                    options={listResultValues}
+                    styles={customSelect}
+                    onChange={handleChangeResultValue}
+                    placeholder="10"
+                  />
+                </div>
+                <span
+                  className="px-2"
+                  style={{
+                    display: rowsData.length > 0 ? "" : "none",
+                  }}
+                >
+                  kết quả
+                </span>
+              </div>
+            </div>
+            <div>
+              <Pagination
+                style={{
+                  marginTop: "1.5rem",
+                  float: "right",
+                  display: rowsData.length > 0 ? "" : "none",
+                }}
+                page={request.page}
+                count={Math.ceil(totalRecord / request.size)}
+                onChange={onPageClick}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
