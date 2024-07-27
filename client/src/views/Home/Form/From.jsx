@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Modal, Button, Row, Col, Form } from "react-bootstrap";
 import { AuthContext } from "../../../contexts/AuthContext";
+import PrintContainer from "../../../components/share/PrintContainer";
+import SinglePrintContainer from "../../../components/share/SinglePrintContainer";
 
 const FromCustom = ({ open, onClose, handleSubmit, isEdit, dataRow, data }) => {
   const { authState } = useContext(AuthContext);
@@ -136,6 +138,9 @@ const FromCustom = ({ open, onClose, handleSubmit, isEdit, dataRow, data }) => {
             </Button>
           </>
         )}
+        <PrintContainer>
+          <SinglePrintContainer />
+        </PrintContainer>
         <Button variant="secondary" onClick={handleClose}>
           Thoát
         </Button>
